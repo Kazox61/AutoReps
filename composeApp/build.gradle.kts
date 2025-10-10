@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.cocoapods)
 }
 
 kotlin {
@@ -20,6 +21,21 @@ kotlin {
         iosSimulatorArm64()
     ).forEach { iosTarget ->
         iosTarget.binaries.framework {
+            baseName = "ComposeApp"
+            isStatic = true
+        }
+    }
+
+    cocoapods {
+        summary = "Some description for a Kotlin/Native module"
+        homepage = "Link to a Kotlin/Native module homepage"
+        version = "1.0"
+
+        podfile = project.file("../iosApp/Podfile")
+
+        ios.deploymentTarget = "16.6"
+
+        framework {
             baseName = "ComposeApp"
             isStatic = true
         }
