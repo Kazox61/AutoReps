@@ -9,7 +9,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 
 @Composable
-fun LandmarkView(pose: Pose?, frameWidth: Int, frameHeight: Int, isFrontCamera: Boolean = true) {
+fun LandmarkOverlay(pose: Pose?, frameWidth: Int, frameHeight: Int, isFrontCamera: Boolean = true) {
     Canvas(modifier = Modifier.fillMaxSize()) {
         pose?.let {
             val frameAspectRatio = frameWidth.toFloat() / frameHeight.toFloat()

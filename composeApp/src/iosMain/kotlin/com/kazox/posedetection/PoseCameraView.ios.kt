@@ -33,5 +33,7 @@ actual fun PoseCameraView(
         modifier = Modifier.fillMaxSize()
     )
 
-    LandmarkView(pose.value, imageWidth.value, imageHeight.value)
+    if (showLandmarks) {
+        LandmarkOverlay(pose.value, imageWidth.value, imageHeight.value)
+    }
 }

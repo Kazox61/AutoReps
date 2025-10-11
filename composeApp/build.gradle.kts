@@ -51,8 +51,7 @@ kotlin {
             implementation(libs.androidx.camera.lifecycle)
             implementation(libs.androidx.camera.view)
 
-            implementation("com.google.mlkit:pose-detection:18.0.0-beta5")
-            implementation("com.google.mlkit:pose-detection-accurate:18.0.0-beta5")
+            implementation("com.google.mediapipe:tasks-vision:0.10.29")
         }
         commonMain.dependencies {
             implementation(compose.runtime)
