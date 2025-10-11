@@ -18,8 +18,10 @@ object PoseConnections {
         LandmarkType.LEFT_SHOULDER to LandmarkType.LEFT_HIP,
         LandmarkType.RIGHT_SHOULDER to LandmarkType.RIGHT_HIP,
         LandmarkType.LEFT_HIP to LandmarkType.RIGHT_HIP,
-        LandmarkType.LEFT_HIP to LandmarkType.LEFT_ANKLE,
-        LandmarkType.RIGHT_HIP to LandmarkType.RIGHT_ANKLE
+        LandmarkType.LEFT_HIP to LandmarkType.LEFT_KNEE,
+        LandmarkType.LEFT_KNEE to LandmarkType.LEFT_ANKLE,
+        LandmarkType.RIGHT_HIP to LandmarkType.RIGHT_KNEE,
+        LandmarkType.RIGHT_KNEE to LandmarkType.RIGHT_ANKLE
     )
 }
 

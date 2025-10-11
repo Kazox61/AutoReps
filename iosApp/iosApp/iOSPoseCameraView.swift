@@ -173,14 +173,12 @@ extension iOSPoseCameraView: PoseLandmarkerLiveStreamDelegate {
             let rotated = rotateLandmark(landmark, orientation: imageOrientation)
             
             return ComposeApp.Pose.Landmark(
-                type: Int32(index),
+                type: ComposeApp.LandmarkType.entries[index],
                 x: rotated.x,
                 y: rotated.y,
                 wx: Float(worldLandmark.x),
                 wy: Float(worldLandmark.y),
-                wz: Float(worldLandmark.z),
-                confidence: 1.0
-            )
+                wz: Float(worldLandmark.z)            )
         }
 
         let pose = ComposeApp.Pose(landmarks: landmarks)
