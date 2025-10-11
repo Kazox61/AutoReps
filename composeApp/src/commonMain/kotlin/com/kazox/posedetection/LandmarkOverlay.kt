@@ -8,8 +8,28 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 
+object PoseConnections {
+    val bones = listOf(
+        LandmarkType.LEFT_SHOULDER to LandmarkType.LEFT_ELBOW,
+        LandmarkType.LEFT_ELBOW to LandmarkType.LEFT_WRIST,
+        LandmarkType.RIGHT_SHOULDER to LandmarkType.RIGHT_ELBOW,
+        LandmarkType.RIGHT_ELBOW to LandmarkType.RIGHT_WRIST,
+        LandmarkType.LEFT_SHOULDER to LandmarkType.RIGHT_SHOULDER,
+        LandmarkType.LEFT_SHOULDER to LandmarkType.LEFT_HIP,
+        LandmarkType.RIGHT_SHOULDER to LandmarkType.RIGHT_HIP,
+        LandmarkType.LEFT_HIP to LandmarkType.RIGHT_HIP,
+        LandmarkType.LEFT_HIP to LandmarkType.LEFT_ANKLE,
+        LandmarkType.RIGHT_HIP to LandmarkType.RIGHT_ANKLE
+    )
+}
+
 @Composable
-fun LandmarkOverlay(pose: Pose?, frameWidth: Int, frameHeight: Int, isFrontCamera: Boolean = true) {
+fun LandmarkOverlay(
+    pose: Pose?,
+    frameWidth: Int,
+    frameHeight: Int,
+    isFrontCamera: Boolean = true
+) {
     Canvas(modifier = Modifier.fillMaxSize()) {
         pose?.let {
             val frameAspectRatio = frameWidth.toFloat() / frameHeight.toFloat()
@@ -26,46 +46,41 @@ fun LandmarkOverlay(pose: Pose?, frameWidth: Int, frameHeight: Int, isFrontCamer
             val lengthX = maxCanvasX - minCanvasX
             val lengthY = maxCanvasY - minCanvasY
 
-            fun transformX(x: Float) = if (isFrontCamera) maxCanvasX - x * lengthX else minCanvasX + x / frameWidth * lengthX
+            fun transformX(x: Float) =
+                if (isFrontCamera) maxCanvasX - x * lengthX else minCanvasX + x * lengthX
+
             fun transformY(y: Float) = minCanvasY + y * lengthY
 
-            pose.landmarks.forEach { landmark ->
-                drawCircle(
-                    color = Color.Blue,
-                    radius = 8f,
-                    center = Offset(transformX(landmark.x), transformY(landmark.y)),
-                )
-                drawCircle(
-                    color = Color.White,
-                    radius = 20f,
-                    center = Offset(transformX(landmark.x), transformY(landmark.y)),
-                    style = Stroke(
-                        width = 4f
-                    )
-                )
-            }
-
-            fun line(a: Int, b: Int) {
-                val l1 = pose.landmarks.find { it.type == a }
-                val l2 = pose.landmarks.find { it.type == b }
-                if (l1 != null && l2 != null) {
+            PoseConnections.bones.forEach { (startType, endType) ->
+                val start = pose.landmarks.find { it.type == startType }
+                val end = pose.landmarks.find { it.type == endType }
+                if (start != null && end != null) {
                     drawLine(
                         color = Color.Blue,
-                        start = Offset(transformX(l1.x), transformY(l1.y)),
-                        end = Offset(transformX(l2.x), transformY(l2.y)),
+                        start = Offset(transformX(start.x), transformY(start.y)),
+                        end = Offset(transformX(end.x), transformY(end.y)),
                         strokeWidth = 6f
                     )
                 }
             }
 
-            line(11, 13) // left shoulder → left elbow
-            line(13, 15) // left elbow → left wrist
-            line(12, 14) // right shoulder → right elbow
-            line(14, 16) // right elbow → right wrist
-            line(11, 12) // shoulders
-            line(23, 24) // hips
-            line(11, 23) // left torso side
-            line(12, 24) // right torso side
+            val connectedLandmarks = PoseConnections.bones
+                .flatMap { listOf(it.first, it.second) }
+                .toSet()
+
+            pose.landmarks.filter { it.type in connectedLandmarks }.forEach { landmark ->
+                val cx = transformX(landmark.x)
+                val cy = transformY(landmark.y)
+
+                drawCircle(color = Color.Blue, radius = 8f, center = Offset(cx, cy))
+                drawCircle(
+                    color = Color.White,
+                    radius = 20f,
+                    center = Offset(cx, cy),
+                    style = Stroke(width = 4f)
+                )
+            }
+
         }
     }
 }

@@ -43,13 +43,12 @@ actual fun PoseCameraView(
                 val world = worldLandmarks[index]
                 val rotated = rotateLandmark(lm.x(), lm.y())
                 Pose.Landmark(
-                    type = index,
+                    type = LandmarkType.fromIndex(index),
                     x = rotated.first,
                     y = rotated.second,
                     wx = world.x(),
                     wy = world.y(),
-                    wz = world.z(),
-                    confidence = 1.0f
+                    wz = world.z()
                 )
             }
 
