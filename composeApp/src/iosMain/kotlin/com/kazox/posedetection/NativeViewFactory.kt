@@ -5,6 +5,6 @@ import platform.UIKit.UIView
 interface NativeViewFactory {
     fun createPoseCameraView(
         showLandmarks: Boolean,
-        onPoseDetected: (Pose?) -> Unit
+        onPoseDetected: (Pose?, Int, Int) -> Unit
     ): UIView
 }

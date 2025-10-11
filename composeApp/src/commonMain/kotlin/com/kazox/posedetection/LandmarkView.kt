@@ -6,8 +6,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.PaintingStyle
-import androidx.compose.ui.graphics.drawscope.DrawStyle
 import androidx.compose.ui.graphics.drawscope.Stroke
 
 @Composable
@@ -28,8 +26,8 @@ fun LandmarkView(pose: Pose?, frameWidth: Int, frameHeight: Int, isFrontCamera: 
             val lengthX = maxCanvasX - minCanvasX
             val lengthY = maxCanvasY - minCanvasY
 
-            fun transformX(x: Float) = if (isFrontCamera) maxCanvasX - x / frameWidth * lengthX else minCanvasX + x / frameWidth * lengthX
-            fun transformY(y: Float) = minCanvasY + y / frameHeight * lengthY
+            fun transformX(x: Float) = if (isFrontCamera) maxCanvasX - x * lengthX else minCanvasX + x / frameWidth * lengthX
+            fun transformY(y: Float) = minCanvasY + y * lengthY
 
             pose.landmarks.forEach { landmark ->
                 drawCircle(

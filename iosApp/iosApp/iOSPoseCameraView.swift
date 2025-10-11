@@ -1,155 +1,206 @@
-// iOSMain/iosApp/PoseCameraView.swift
-
 import UIKit
 import AVFoundation
+import MediaPipeTasksVision
 import ComposeApp
-import MLKitVision
-import MLKitPoseDetection
-
 
 class iOSNativeViewFactory: NativeViewFactory {
     static var shared = iOSNativeViewFactory()
     
-    func createPoseCameraView(showLandmarks: Bool, onPoseDetected: @escaping (ComposeApp.Pose?) -> Void) -> UIView {
+    func createPoseCameraView(showLandmarks: Bool, onPoseDetected: @escaping (ComposeApp.Pose?, KotlinInt, KotlinInt) -> Void) -> UIView {
         let view = iOSPoseCameraView()
         view.onPoseDetected = onPoseDetected
         return view
     }
 }
 
-@objc class iOSPoseCameraView: UIView, AVCaptureVideoDataOutputSampleBufferDelegate {
+@objc class iOSPoseCameraView: UIView {
     
     private let session = AVCaptureSession()
-    private var previewLayer: AVCaptureVideoPreviewLayer?
-    private var videoOutput = AVCaptureVideoDataOutput()
+    private let videoOutput = AVCaptureVideoDataOutput()
     private let cameraQueue = DispatchQueue(label: "cameraQueue")
-    var onPoseDetected: ((ComposeApp.Pose?) -> Void)?
-    
-    // The pose detector instance
-    private let poseDetector: PoseDetector
+    private var previewLayer: AVCaptureVideoPreviewLayer?
+
+    private var poseLandmarker: PoseLandmarker?
+    var onPoseDetected: ((ComposeApp.Pose?, KotlinInt, KotlinInt) -> Void)?
+    var imageWidth: KotlinInt = 0
+    var imageHeight: KotlinInt = 0
     
     override init(frame: CGRect) {
-        // create pose detector before super.init
-        let options = PoseDetectorOptions()
-        options.detectorMode = .stream
-        self.poseDetector = PoseDetector.poseDetector(options: options)
         super.init(frame: frame)
-        commonInit()
+        initialize()
     }
-    
+
     required init?(coder: NSCoder) {
-        // You might not support init(from coder) for pose detection scenario
-        let options = PoseDetectorOptions()
-        options.detectorMode = .stream
-        self.poseDetector = PoseDetector.poseDetector(options: options)
         super.init(coder: coder)
-        commonInit()
+        initialize()
     }
-    
-    private func commonInit() {
-        // camera input
+
+    private func initialize() {
+        setupCamera()
+        setupPoseLandmarker()
+    }
+
+    private func setupCamera() {
         guard let device = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .front),
               let input = try? AVCaptureDeviceInput(device: device),
               session.canAddInput(input) else {
-            print("⚠️ Could not get camera input")
+            print("Could not set up camera input.")
             return
         }
+
         session.beginConfiguration()
         session.sessionPreset = .high
         session.addInput(input)
         
-        // output setup
+        videoOutput.videoSettings = [kCVPixelBufferPixelFormatTypeKey as String:
+                                     kCVPixelFormatType_32BGRA]
+
+
         videoOutput.alwaysDiscardsLateVideoFrames = true
         videoOutput.setSampleBufferDelegate(self, queue: cameraQueue)
+
         if session.canAddOutput(videoOutput) {
             session.addOutput(videoOutput)
         }
+
         session.commitConfiguration()
-        
-        // preview layer
-        let pl = AVCaptureVideoPreviewLayer(session: session)
-        pl.videoGravity = .resizeAspectFill
-        layer.addSublayer(pl)
-        previewLayer = pl
-        
-        // start session on background
+
+        let preview = AVCaptureVideoPreviewLayer(session: session)
+        preview.videoGravity = .resizeAspectFill
+        layer.addSublayer(preview)
+        self.previewLayer = preview
+
         cameraQueue.async { [weak self] in
             self?.session.startRunning()
         }
     }
-    
+
+    private func setupPoseLandmarker() {
+        guard let modelPath = Bundle.main.path(forResource: "pose_landmarker_full", ofType: "task") else {
+            print("PoseLandmarker model not found.")
+            return
+        }
+
+        let options = PoseLandmarkerOptions()
+        options.baseOptions.modelAssetPath = modelPath
+        options.runningMode = .liveStream
+        options.numPoses = 1
+        options.minPoseDetectionConfidence = 0.5
+        options.minPosePresenceConfidence = 0.5
+        options.minTrackingConfidence = 0.5
+        options.poseLandmarkerLiveStreamDelegate = self
+
+        do {
+            poseLandmarker = try PoseLandmarker(options: options)
+        } catch {
+            print("Failed to initialize PoseLandmarker: \(error)")
+        }
+    }
+
     override func layoutSubviews() {
         super.layoutSubviews()
         previewLayer?.frame = bounds
     }
-    
+
     deinit {
         if session.isRunning {
             session.stopRunning()
         }
     }
-    
-    // MARK: - AVCaptureVideoDataOutputSampleBufferDelegate
-    
-    func captureOutput(_ output: AVCaptureOutput,
-                       didOutput sampleBuffer: CMSampleBuffer,
-                       from connection: AVCaptureConnection) {
-        // Convert sampleBuffer to VisionImage
-        let image = VisionImage(buffer: sampleBuffer)
-        image.orientation = imageOrientation(
-            deviceOrientation: UIDevice.current.orientation,
-            cameraPosition: .front
-        )
+}
+
+extension iOSPoseCameraView: AVCaptureVideoDataOutputSampleBufferDelegate {
+    func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+        guard let landmarker = poseLandmarker else { return }
+
+        let orientation: UIImage.Orientation
+
+        switch connection.videoRotationAngle {
+        case 0:
+            orientation = .rightMirrored
+        case 90:
+            orientation = .downMirrored
+        case 180:
+            orientation = .leftMirrored
+        case 270:
+            orientation = .upMirrored
+        default:
+            orientation = .rightMirrored
+        }
+
+        do {
+            let mpImage = try MPImage(sampleBuffer: sampleBuffer, orientation: orientation)
+            
+            if (connection.videoRotationAngle == 0 || connection.videoRotationAngle == 180) {
+                self.imageWidth = KotlinInt(int: Int32(mpImage.height))
+                self.imageHeight = KotlinInt(int: Int32(mpImage.width))
+            }
+            else {
+                self.imageWidth = KotlinInt(int: Int32(mpImage.width))
+                self.imageHeight = KotlinInt(int: Int32(mpImage.height))
+            }
+
+            let timestamp = CMTimeGetSeconds(CMSampleBufferGetPresentationTimeStamp(sampleBuffer)) * 1000
+            try landmarker.detectAsync(image: mpImage, timestampInMilliseconds: Int(timestamp))
+        } catch {
+            print("Pose detection failed: \(error)")
+        }
+    }
+}
+
+extension iOSPoseCameraView: PoseLandmarkerLiveStreamDelegate {
+    func poseLandmarker(_ landmarker: PoseLandmarker, didFinishDetection result: PoseLandmarkerResult?, timestampInMilliseconds: Int, error: Error?) {
+        guard error == nil, let result = result else {
+            print("Detection error: \(String(describing: error))")
+            return
+        }
+
+        guard let mediaPipeLandmarks = result.landmarks.first else {
+            self.onPoseDetected?(nil, self.imageWidth, self.imageHeight)
+            return
+        }
         
-        poseDetector.process(image) { [weak self] poses, error in
-            guard error == nil else {
-                print("Pose detection error: \(error!.localizedDescription)")
-                return
-            }
-            guard let poses = poses, !poses.isEmpty else {
-                
-                return
-            }
+        guard let worldLandmarks = result.worldLandmarks.first else {
+            print("World landmarks missing")
+            self.onPoseDetected?(nil, self.imageWidth, self.imageHeight)
+            return
+        }
+
+        let imageOrientation: UIImage.Orientation = .leftMirrored
+        let landmarks = mediaPipeLandmarks.enumerated().compactMap { (index, landmark) -> ComposeApp.Pose.Landmark? in
+            guard index < worldLandmarks.count else { return nil }
+            let worldLandmark = worldLandmarks[index]
+            let rotated = rotateLandmark(landmark, orientation: imageOrientation)
             
-            
-            let mllandmarks = poses[0].landmarks
-           
-            var landmarks = [ComposeApp.Pose.Landmark]()
-            
-            for (index, lm) in mllandmarks.enumerated() {
-               let landmark = ComposeApp.Pose.Landmark(
-                    type: Int32(index),
-                    x: Float(lm.position.x),
-                    y: Float(lm.position.z),
-                    wx: Float(lm.position.x),
-                    wy: Float(lm.position.y),
-                    wz: Float(lm.position.z),
-                   confidence: Float(lm.inFrameLikelihood)
-               )
-               
-               landmarks.append(landmark)
-           }
-            
-            let pose = ComposeApp.Pose(landmarks: landmarks)
-            
-            self?.onPoseDetected?(pose)
-            
+            return ComposeApp.Pose.Landmark(
+                type: Int32(index),
+                x: rotated.x,
+                y: rotated.y,
+                wx: Float(worldLandmark.x),
+                wy: Float(worldLandmark.y),
+                wz: Float(worldLandmark.z),
+                confidence: 1.0
+            )
+        }
+
+        let pose = ComposeApp.Pose(landmarks: landmarks)
+        DispatchQueue.main.async {
+            self.onPoseDetected?(pose, self.imageWidth, self.imageHeight)
         }
     }
     
-    private func imageOrientation(deviceOrientation: UIDeviceOrientation,
-                                  cameraPosition: AVCaptureDevice.Position) -> UIImage.Orientation {
-        switch deviceOrientation {
-        case .portrait:
-            return cameraPosition == .front ? .leftMirrored : .right
-        case .landscapeLeft:
-            return cameraPosition == .front ? .downMirrored : .up
-        case .portraitUpsideDown:
-            return cameraPosition == .front ? .rightMirrored : .left
-        case .landscapeRight:
-            return cameraPosition == .front ? .upMirrored : .down
+    func rotateLandmark(_ landmark: NormalizedLandmark, orientation: UIImage.Orientation) -> (x: Float, y: Float) {
+        switch orientation {
+        case .leftMirrored:
+            return (x: 1-Float(landmark.y), y: Float(landmark.x))
+        case .left:
+            return (x: Float(landmark.y), y: Float(landmark.x))
+        case .rightMirrored:
+            return (x: 1-Float(landmark.y), y: Float(landmark.x))
+        case .right:
+            return (x: Float(landmark.y), y: Float(landmark.x))
         default:
-            return .up
+            return (x: Float(landmark.x), y: Float(landmark.y))
         }
     }
 }
