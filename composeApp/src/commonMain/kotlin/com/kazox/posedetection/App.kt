@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -23,7 +24,6 @@ fun App() {
             val permissions = providePermissions()
             val cameraPermissionState = remember { mutableStateOf(permissions.hasCameraPermission()) }
 
-
             if (!cameraPermissionState.value) {
                 permissions.RequestCameraPermission(
                     onGranted = { cameraPermissionState.value = true },
@@ -33,11 +33,27 @@ fun App() {
 
             if (cameraPermissionState.value) {
                 Box(modifier = Modifier.fillMaxSize()) {
-                    PoseCameraView { pose ->
-                        pose?.let {
+                    val repCount = remember { mutableStateOf(0) }
+                    val pushupExercise = remember { PushupExercise() }
 
+                    remember {
+                        pushupExercise.onRep {
+                            repCount.value += 1
                         }
                     }
+
+                    PoseCameraView { pose ->
+                        pose?.let {
+                            pushupExercise.process(it)
+                        }
+                    }
+
+                    Text(
+                        text = "Pushups: ${repCount.value}",
+                        style = MaterialTheme.typography.headlineMedium,
+                        modifier = Modifier
+                            .windowInsetsPadding(WindowInsets.systemBars)
+                    )
                 }
             }
         }
