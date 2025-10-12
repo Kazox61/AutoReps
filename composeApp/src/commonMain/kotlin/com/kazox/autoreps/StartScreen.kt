@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -33,7 +34,9 @@ fun StartScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             PushupAnimation(
-                modifier = Modifier.width(600.dp)
+                modifier = Modifier
+                    .padding(32.dp)
+                    .width(500.dp)
             )
             Spacer(modifier = Modifier.height(64.dp))
             Button(

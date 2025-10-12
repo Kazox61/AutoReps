@@ -97,15 +97,14 @@ fun CounterScreen() {
                     label = "breathing"
                 )
 
-                val borderColor = MaterialTheme.colorScheme.primary
                 val circleColor by animateColorAsState(
-                    targetValue = MaterialTheme.colorScheme.primaryContainer,
+                    targetValue = MaterialTheme.colorScheme.primary,
                     animationSpec = tween(300),
                     label = "circleColor"
                 )
 
                 val onCircleColor by animateColorAsState(
-                    targetValue = MaterialTheme.colorScheme.onPrimaryContainer,
+                    targetValue = MaterialTheme.colorScheme.onPrimary,
                     animationSpec = tween(300),
                     label = "onCircleColor"
                 )
