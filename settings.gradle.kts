@@ -1,4 +1,4 @@
-rootProject.name = "Posedetection"
+rootProject.name = "AutoReps"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {

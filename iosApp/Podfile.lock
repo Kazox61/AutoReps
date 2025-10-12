@@ -18,7 +18,7 @@ EXTERNAL SOURCES:
     :path: "../composeApp"
 
 SPEC CHECKSUMS:
-  composeApp: 5b1060c299926495d7a6ac911bec6d26972565f7
+  composeApp: 212e59022b9f9a7143fcd71c4081a2079f03ed3b
   MediaPipeTasksCommon: 6cfa29170d4900f04d250ad95ec058f14a741f38
   MediaPipeTasksVision: 7b1c0f5a5820e87e9d96926f5e65d8cd3744fac2
 

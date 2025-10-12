@@ -1,4 +1,3 @@
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -36,7 +35,7 @@ kotlin {
         ios.deploymentTarget = "16.6"
 
         framework {
-            baseName = "ComposeApp"
+            baseName = "composeApp"
             isStatic = true
         }
     }
@@ -51,7 +50,7 @@ kotlin {
             implementation(libs.androidx.camera.lifecycle)
             implementation(libs.androidx.camera.view)
 
-            implementation("com.google.mediapipe:tasks-vision:0.10.29")
+            implementation(libs.mediapipe.tasks.vision)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -70,11 +69,11 @@ kotlin {
 }
 
 android {
-    namespace = "com.kazox.posedetection"
+    namespace = "com.kazox.autoreps"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
-        applicationId = "com.kazox.posedetection"
+        applicationId = "com.kazox.autoreps"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
