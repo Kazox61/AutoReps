@@ -35,7 +35,7 @@ actual fun PoseCameraView(
             if (imageWidth > 0 && imageHeight > 0) {
                 imageWidth.toFloat() / imageHeight.toFloat()
             } else {
-                4f / 3f
+                3f / 4f
             }
         }
     }

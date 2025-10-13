@@ -51,7 +51,7 @@ actual fun PoseCameraView(
             if (currentFrameWidth > 0 && currentFrameHeight > 0) {
                 currentFrameWidth.toFloat() / currentFrameHeight.toFloat()
             } else {
-                4f / 3f
+                3f / 4f
             }
         }
     }

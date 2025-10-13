@@ -23,15 +23,15 @@ private val DarkColorScheme = darkColorScheme(
 
 private val LightColorScheme = lightColorScheme(
     primary = Primary,
-    onPrimary = OnEverythingLight,
+    onPrimary = OnEverything,
     secondary = Secondary,
-    onSecondary = OnEverythingLight,
+    onSecondary = OnEverything,
     background = BackgroundLight,
     onBackground = OnEverythingLight,
     surface = SurfaceLight,
     onSurface = OnEverythingLight,
     error = Error,
-    onError = OnEverythingLight
+    onError = OnEverything
 )
 
 val ColorScheme.success: Color
