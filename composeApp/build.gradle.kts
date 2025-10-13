@@ -53,6 +53,9 @@ kotlin {
             implementation(libs.androidx.camera.view)
 
             implementation(libs.mediapipe.tasks.vision)
+
+            implementation(libs.koin.android)
+            implementation(libs.koin.androidx.compose)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -67,6 +70,9 @@ kotlin {
             implementation(libs.androidx.material3.adaptive)
             implementation(libs.androidx.room.runtime)
             implementation(libs.androidx.sqlite.bundled)
+            implementation(libs.koin.compose)
+            implementation(libs.koin.compose.viewmodel)
+            api(libs.koin.core)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
