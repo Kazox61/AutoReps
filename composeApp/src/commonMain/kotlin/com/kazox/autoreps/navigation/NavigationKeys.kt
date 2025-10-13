@@ -2,6 +2,7 @@ package com.kazox.autoreps.navigation
 
 import androidx.navigation3.runtime.NavKey
 import autoreps.composeapp.generated.resources.Res
+import autoreps.composeapp.generated.resources.exercises
 import autoreps.composeapp.generated.resources.home
 import autoreps.composeapp.generated.resources.house
 import autoreps.composeapp.generated.resources.record
@@ -26,4 +27,10 @@ data object Record : TopLevelRoute {
     override val title = Res.string.record
 }
 
-val TOP_LEVEL_ROUTES : List<TopLevelRoute> = listOf(Home, Record)
+data object Exercises : TopLevelRoute {
+    override val icon = Res.drawable.house
+    override val description = Res.string.exercises
+    override val title = Res.string.exercises
+}
+
+val TOP_LEVEL_ROUTES : List<TopLevelRoute> = listOf(Home, Record, Exercises)

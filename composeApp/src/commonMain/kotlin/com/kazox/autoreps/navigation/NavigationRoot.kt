@@ -6,6 +6,7 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
 import com.kazox.autoreps.CounterScreen
 import com.kazox.autoreps.StartScreen
+import com.kazox.autoreps.ExerciseListScreen
 
 @Composable
 fun NavigationRoot() {
@@ -25,6 +26,14 @@ fun NavigationRoot() {
             }
             entry<Record>{
                 CounterScreen()
+            }
+            entry<Exercises>{
+                ExerciseListScreen(
+                    topLevelBackStack,
+                    onExerciseSelected = { exercise ->
+
+                    }
+                )
             }
         },
     )

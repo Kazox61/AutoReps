@@ -1,4 +1,5 @@
 <resources>
     <string name="home">Home</string>
     <string name="record">Record</string>
+    <string name="exercises">Exercises</string>
 </resources>
