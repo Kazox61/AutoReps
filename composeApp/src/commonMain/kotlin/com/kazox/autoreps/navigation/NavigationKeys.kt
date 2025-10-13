@@ -1,0 +1,29 @@
+package com.kazox.autoreps.navigation
+
+import androidx.navigation3.runtime.NavKey
+import autoreps.composeapp.generated.resources.Res
+import autoreps.composeapp.generated.resources.home
+import autoreps.composeapp.generated.resources.house
+import autoreps.composeapp.generated.resources.record
+import org.jetbrains.compose.resources.DrawableResource
+import org.jetbrains.compose.resources.StringResource
+
+
+sealed interface TopLevelRoute {
+    val icon: DrawableResource
+    val description: StringResource
+    val title: StringResource
+}
+data object Home : TopLevelRoute {
+    override val icon = Res.drawable.house
+    override val description = Res.string.home
+    override val title = Res.string.home
+}
+
+data object Record : TopLevelRoute {
+    override val icon = Res.drawable.record
+    override val description = Res.string.record
+    override val title = Res.string.record
+}
+
+val TOP_LEVEL_ROUTES : List<TopLevelRoute> = listOf(Home, Record)

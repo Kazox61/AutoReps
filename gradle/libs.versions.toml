@@ -1,14 +1,16 @@
 [versions]
-agp = "8.13.0"
+agp = "8.12.2"
 android-compileSdk = "36"
 android-minSdk = "24"
 android-targetSdk = "36"
 androidx-activity = "1.11.0"
-androidx-lifecycle = "2.9.4"
-composeMultiplatform = "1.9.0"
+androidx-lifecycle = "2.10.0+dev3015"
+composeMultiplatform = "1.10.0+dev3015"
 kotlin = "2.2.20"
 camera = "1.5.1"
 mediapipeTaskVision = "0.10.29"
+androidx-nav3 = "1.0.0+dev3015"
+androidx-adaptive = "1.2.0+dev3015"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -20,6 +22,8 @@ androidx-camera-core = { module = "androidx.camera:camera-core", version.ref = "
 androidx-camera-lifecycle = { module = "androidx.camera:camera-lifecycle", version.ref = "camera" }
 androidx-camera-view = { module = "androidx.camera:camera-view", version.ref = "camera" }
 mediapipe-tasks-vision = { module = "com.google.mediapipe:tasks-vision", version.ref = "mediapipeTaskVision" }
+androidx-nav3-ui = { module = "org.jetbrains.androidx.navigation3:navigation3-ui", version.ref = "androidx-nav3" }
+androidx-material3-adaptive = { module = "org.jetbrains.compose.material3.adaptive:adaptive", version.ref = "androidx-adaptive" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

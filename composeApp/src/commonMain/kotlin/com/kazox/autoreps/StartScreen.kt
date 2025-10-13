@@ -15,14 +15,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.kazox.autoreps.components.PrimaryButton
+import com.kazox.autoreps.navigation.BottomNavigationBar
+import com.kazox.autoreps.navigation.TopLevelBackStack
 
 @Composable
 fun StartScreen(
+    topLevelBackStack: TopLevelBackStack<Any>,
     onStart: () -> Unit
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.background,
+        bottomBar = { BottomNavigationBar(topLevelBackStack) }
     ) { innerPadding ->
 
         Column(
