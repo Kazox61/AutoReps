@@ -14,7 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.kazox.autoreps.components.PrimaryThemedButton
+import com.kazox.autoreps.components.PrimaryButton
 
 @Composable
 fun StartScreen(
@@ -38,7 +38,7 @@ fun StartScreen(
                     .width(500.dp)
             )
             Spacer(modifier = Modifier.height(64.dp))
-            PrimaryThemedButton(
+            PrimaryButton(
                 onClick = onStart
             ) {
                 Text(text = "Start")

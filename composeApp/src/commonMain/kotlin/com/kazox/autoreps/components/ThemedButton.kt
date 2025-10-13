@@ -35,7 +35,7 @@ fun ThemedButton(
 }
 
 @Composable
-fun PrimaryThemedButton(
+fun PrimaryButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
