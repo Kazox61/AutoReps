@@ -5,6 +5,6 @@
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
     <key>NSCameraUsageDescription</key>
-    <string>Camera permission is required for this app to work.</string>
+    <string>Camera is required for counting your reps automatically.</string>
 </dict>
 </plist>
