@@ -117,7 +117,7 @@ fun CountRepsScreen(
 
                     Box(
                         modifier = Modifier
-                            .fillMaxWidth(0.75f)
+                            .fillMaxWidth(0.6f)
                             .aspectRatio(1f)
                             .scale(breathingScale)
                             .clip(CircleShape)
