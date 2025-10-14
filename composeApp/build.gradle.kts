@@ -75,6 +75,12 @@ kotlin {
             api(libs.koin.core)
             implementation(libs.kotlinx.datetime)
             implementation (libs.compose.charts)
+            implementation(libs.calendar.compose)
+
+            implementation("com.russhwolf:multiplatform-settings:1.3.0")
+            implementation("com.russhwolf:multiplatform-settings-datastore:1.3.0")
+            implementation("com.russhwolf:multiplatform-settings-coroutines:1.3.0")
+
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

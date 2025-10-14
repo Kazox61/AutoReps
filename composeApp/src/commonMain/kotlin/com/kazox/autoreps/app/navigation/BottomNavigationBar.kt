@@ -1,4 +1,4 @@
-package com.kazox.autoreps.navigation
+package com.kazox.autoreps.app.navigation
 
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon

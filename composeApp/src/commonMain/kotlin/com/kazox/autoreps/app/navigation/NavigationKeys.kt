@@ -1,6 +1,5 @@
-package com.kazox.autoreps.navigation
+package com.kazox.autoreps.app.navigation
 
-import androidx.navigation3.runtime.NavKey
 import autoreps.composeapp.generated.resources.Res
 import autoreps.composeapp.generated.resources.exercises
 import autoreps.composeapp.generated.resources.home
@@ -36,6 +35,8 @@ data object Exercises : TopLevelRoute {
 }
 
 val TOP_LEVEL_ROUTES : List<TopLevelRoute> = listOf(Home, Record, Exercises)
+
+data object DailyGoal
 
 data class AddWorkout(
     val workout: Workout,

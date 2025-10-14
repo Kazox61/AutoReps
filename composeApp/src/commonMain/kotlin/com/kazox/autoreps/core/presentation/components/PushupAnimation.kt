@@ -1,4 +1,4 @@
-package com.kazox.autoreps
+package com.kazox.autoreps.core.presentation.components
 
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode

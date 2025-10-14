@@ -1,4 +1,4 @@
-package com.kazox.autoreps.navigation
+package com.kazox.autoreps.app.navigation
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf

@@ -1,4 +1,4 @@
-package com.kazox.autoreps
+package com.kazox.autoreps.app
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

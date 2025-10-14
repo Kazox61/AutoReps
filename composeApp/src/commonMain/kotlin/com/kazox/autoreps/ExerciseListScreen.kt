@@ -15,8 +15,8 @@ import androidx.compose.ui.unit.dp
 import com.kazox.autoreps.core.ExerciseCategory
 import com.kazox.autoreps.core.ExerciseInfo
 import com.kazox.autoreps.core.exerciseList
-import com.kazox.autoreps.navigation.BottomNavigationBar
-import com.kazox.autoreps.navigation.TopLevelBackStack
+import com.kazox.autoreps.app.navigation.BottomNavigationBar
+import com.kazox.autoreps.app.navigation.TopLevelBackStack
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -40,8 +40,8 @@ import autoreps.composeapp.generated.resources.start
 import com.kazox.autoreps.core.PoseCameraView
 import com.kazox.autoreps.core.providePermissions
 import com.kazox.autoreps.feature.workout.domain.model.Workout
-import com.kazox.autoreps.navigation.AddWorkout
-import com.kazox.autoreps.navigation.TopLevelBackStack
+import com.kazox.autoreps.app.navigation.AddWorkout
+import com.kazox.autoreps.app.navigation.TopLevelBackStack
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.compose.resources.stringResource

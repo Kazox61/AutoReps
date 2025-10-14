@@ -10,4 +10,29 @@
     <string name="number_of_sets">Anzahl der Sätze</string>
     <string name="max_reps_in_row">Max. Reps hintereinander</string>
     <string name="start">Starten</string>
+    <string name="finish">Beenden</string>
+    <string name="setup_daily_goal">Bitte legen Sie Ihr tägliches Liegestütz-Ziel fest!</string>
+    <string-array name="days_short">
+        <item>Mo</item>
+        <item>Di</item>
+        <item>Mi</item>
+        <item>Do</item>
+        <item>Fr</item>
+        <item>Sa</item>
+        <item>So</item>
+    </string-array>
+    <string-array name="months">
+        <item>Januar</item>
+        <item>Februar</item>
+        <item>März</item>
+        <item>April</item>
+        <item>Mai</item>
+        <item>Juni</item>
+        <item>Juli</item>
+        <item>August</item>
+        <item>September</item>
+        <item>Oktober</item>
+        <item>November</item>
+        <item>Dezember</item>
+    </string-array>
 </resources>

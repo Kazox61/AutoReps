@@ -1,7 +1,10 @@
 package com.kazox.autoreps.di
 
-import com.kazox.autoreps.MainViewModel
+import com.kazox.autoreps.app.PreferencesManager
+import com.kazox.autoreps.app.navigation.NavigationViewModel
+import com.kazox.autoreps.feature.home.presentation.HomeViewModel
 import com.kazox.autoreps.feature.record.presentation.countReps.CountRepsViewModel
+import com.kazox.autoreps.feature.setup.presentation.dailyGoal.DailyGoalViewModel
 import com.kazox.autoreps.feature.workout.data.repository.WorkoutRepositoryImpl
 import com.kazox.autoreps.feature.workout.domain.repository.WorkoutRepository
 import com.kazox.autoreps.feature.workout.domain.useCase.AddReps
@@ -21,6 +24,7 @@ import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val commonModule = module {
+    singleOf(::PreferencesManager)
     singleOf(::WorkoutRepositoryImpl).bind<WorkoutRepository>()
     single {
         WorkoutUseCases(
@@ -34,7 +38,9 @@ val commonModule = module {
             getRepsForWorkout = GetRepsForWorkout(get())
         )
     }
-    viewModelOf(::MainViewModel)
+    viewModelOf(::NavigationViewModel)
+    viewModelOf(::DailyGoalViewModel)
+    viewModelOf(::HomeViewModel)
     viewModelOf(::AddEditViewModel)
     viewModelOf(::WorkoutsViewModel)
     viewModelOf(::CountRepsViewModel)

@@ -1,4 +1,4 @@
-package com.kazox.autoreps
+package com.kazox.autoreps.app
 
 import android.app.Application
 import com.kazox.autoreps.di.initKoin

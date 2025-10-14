@@ -34,7 +34,7 @@ import com.kazox.autoreps.feature.workout.domain.model.Rep
 import com.kazox.autoreps.feature.workout.domain.model.Workout
 import com.kazox.autoreps.feature.workout.presentation.addEditWorkout.components.TopBar
 import com.kazox.autoreps.feature.workout.presentation.workouts.components.WorkoutInsights
-import com.kazox.autoreps.navigation.TopLevelBackStack
+import com.kazox.autoreps.app.navigation.TopLevelBackStack
 import ir.ehsannarmani.compose_charts.LineChart
 import ir.ehsannarmani.compose_charts.RowChart
 import ir.ehsannarmani.compose_charts.models.BarProperties

@@ -1,4 +1,4 @@
-package com.kazox.autoreps.components
+package com.kazox.autoreps.core.presentation.components
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
