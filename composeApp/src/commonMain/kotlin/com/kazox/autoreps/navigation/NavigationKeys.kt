@@ -6,6 +6,8 @@ import autoreps.composeapp.generated.resources.exercises
 import autoreps.composeapp.generated.resources.home
 import autoreps.composeapp.generated.resources.house
 import autoreps.composeapp.generated.resources.record
+import com.kazox.autoreps.feature.workout.domain.model.Rep
+import com.kazox.autoreps.feature.workout.domain.model.Workout
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
 
@@ -34,3 +36,13 @@ data object Exercises : TopLevelRoute {
 }
 
 val TOP_LEVEL_ROUTES : List<TopLevelRoute> = listOf(Home, Record, Exercises)
+
+data class AddWorkout(
+    val workout: Workout,
+    val reps: List<Rep>
+)
+
+data class EditWorkout(
+    val workout: Workout,
+    val reps: List<Rep>
+)

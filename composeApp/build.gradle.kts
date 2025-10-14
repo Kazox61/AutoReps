@@ -73,6 +73,8 @@ kotlin {
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
             api(libs.koin.core)
+            implementation(libs.kotlinx.datetime)
+            implementation (libs.compose.charts)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

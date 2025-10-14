@@ -10,17 +10,8 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 @Preview
-fun App(
-    mainViewModel: MainViewModel = koinViewModel()
-) {
+fun App() {
     AppTheme {
         NavigationRoot()
-    }
-
-
-
-    LaunchedEffect(Unit) {
-        delay(2000)
-        mainViewModel.addWorkout()
     }
 }

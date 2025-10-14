@@ -2,4 +2,15 @@
     <string name="home">Home</string>
     <string name="record">Record</string>
     <string name="exercises">Exercises</string>
+    <string name="save">Save</string>
+    <string name="save_workout">Save Workout</string>
+    <string name="reps">Reps</string>
+    <string name="sets">Sets</string>
+    <string name="name_workout" >Give the workout a name.</string>
+    <string name="duration">Duration</string>
+    <string name="average_frequency">Average Frequency</string>
+    <string name="date">Date</string>
+    <string name="number_of_sets">Number of Sets</string>
+    <string name="max_reps_in_row" >Max reps in a row</string>
+    <string name="start">Start</string>
 </resources>

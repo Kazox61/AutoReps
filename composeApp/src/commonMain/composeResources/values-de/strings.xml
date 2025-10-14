@@ -1,0 +1,13 @@
+<resources>
+    <string name="save">Speichern</string>
+    <string name="save_workout">Workout speichern</string>
+    <string name="reps">Wiederholungen</string>
+    <string name="sets">Sätze</string>
+    <string name="name_workout">"Gib dem Workout einen Namen."</string>
+    <string name="duration">Dauer</string>
+    <string name="average_frequency">Durchschn. Frequenz</string>
+    <string name="date">Datum</string>
+    <string name="number_of_sets">Anzahl der Sätze</string>
+    <string name="max_reps_in_row">Max. Reps hintereinander</string>
+    <string name="start">Starten</string>
+</resources>
