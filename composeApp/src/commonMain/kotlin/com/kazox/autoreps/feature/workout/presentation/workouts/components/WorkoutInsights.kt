@@ -12,6 +12,7 @@ import autoreps.composeapp.generated.resources.duration
 import autoreps.composeapp.generated.resources.max_reps_in_row
 import autoreps.composeapp.generated.resources.number_of_sets
 import autoreps.composeapp.generated.resources.reps
+import com.kazox.autoreps.core.domain.util.dateFormat
 import com.kazox.autoreps.core.domain.util.formatDuration
 import com.kazox.autoreps.feature.workout.domain.model.Rep
 import com.kazox.autoreps.feature.workout.domain.model.Workout
@@ -41,7 +42,7 @@ fun WorkoutInsights(
             description1 = stringResource(Res.string.average_frequency),
             value1 = "$averageFrequency rpm",
             description2 = stringResource(Res.string.date),
-            value2 = workout.startedDateTime.toString()
+            value2 = dateFormat.format(workout.startedDateTime.date)
         )
 
         WorkoutInsightsRow(

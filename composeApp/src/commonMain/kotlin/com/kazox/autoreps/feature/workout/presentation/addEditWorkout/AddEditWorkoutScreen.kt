@@ -224,7 +224,7 @@ fun RepsLineChart(reps: List<Rep>) {
                 ),
                 count = IndicatorCount.StepBased(1.0),
                 contentBuilder = { indicator ->
-                    indicator.format(1)
+                    indicator.format(0)
                 },
             ),
             labelProperties = LabelProperties(

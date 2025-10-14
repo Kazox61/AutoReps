@@ -171,7 +171,7 @@ private fun DayCell(
                     RepsLevel.Low -> if (isToday) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onError
                     RepsLevel.None -> if (isToday) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onBackground
                 }
-            } else MaterialTheme.colorScheme.onBackground
+            } else Color.Transparent
         )
     }
 }
