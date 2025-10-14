@@ -15,6 +15,7 @@ import autoreps.composeapp.generated.resources.reps
 import com.kazox.autoreps.core.domain.util.formatDuration
 import com.kazox.autoreps.feature.workout.domain.model.Rep
 import com.kazox.autoreps.feature.workout.domain.model.Workout
+import com.kazox.autoreps.feature.workout.domain.util.startedDateTime
 import org.jetbrains.compose.resources.stringResource
 import kotlin.math.round
 

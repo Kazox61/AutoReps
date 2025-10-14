@@ -2,7 +2,6 @@ package com.kazox.autoreps.feature.workout.domain.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import kotlinx.datetime.LocalDateTime
 
 @Entity
 data class Workout(
@@ -12,9 +11,6 @@ data class Workout(
     val duration: Int,
     @PrimaryKey(autoGenerate = true)
     val id : Int = 0,
-) {
-    val startedDateTime: LocalDateTime
-        get() = LocalDateTime.parse(startedAt)
-}
+)
 
 class InvalidWorkoutException(message: String) : Exception(message)

@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.kazox.autoreps.feature.workout.domain.model.Rep
 import com.kazox.autoreps.feature.workout.domain.model.Workout
 import com.kazox.autoreps.feature.workout.domain.useCase.WorkoutUseCases
-import com.kazox.autoreps.feature.workout.domain.util.getStartHour
+import com.kazox.autoreps.feature.workout.domain.util.startedDateTime
 import kotlinx.coroutines.launch
 
 class AddEditViewModel(
@@ -16,19 +16,23 @@ class AddEditViewModel(
     var workout: Workout? = null
     var reps: List<Rep>? = null
 
-    private val _workoutName = mutableStateOf(
-        when (workout?.name) {
-            null ->
-                when (workout?.getStartHour()) {
-                    in 5..11 -> "Morning Workout"
-                    in 12..17 -> "Afternoon Workout"
-                    in 18 .. 22 -> "Evening Workout"
-                    else -> "Night Workout"
-                }
-            else -> workout?.name ?: "New Workout"
-        }
-    )
+    private val _workoutName = mutableStateOf("")
     val workoutName: MutableState<String> = _workoutName
+
+    fun initWorkout(workout: Workout?, reps: List<Rep>?) {
+        this.workout = workout
+        this.reps = reps
+
+        _workoutName.value = when (workout?.name) {
+            null -> when (workout?.startedDateTime?.hour) {
+                in 5..11 -> "Morning Workout"
+                in 12..17 -> "Afternoon Workout"
+                in 18 .. 22 -> "Evening Workout"
+                else -> "Night Workout"
+            }
+            else -> workout.name ?: "New Workout"
+        }
+    }
 
     fun onEvent(event: AddEditWorkoutEvent) {
         when (event) {
