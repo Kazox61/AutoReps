@@ -8,13 +8,14 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
 import com.kazox.autoreps.feature.home.presentation.HomeScreen
 import com.kazox.autoreps.feature.record.presentation.countReps.CountRepsScreen
+import com.kazox.autoreps.feature.record.presentation.countReps.CountRepsViewModel
 import com.kazox.autoreps.feature.setup.presentation.dailyGoal.DailyGoalScreen
+import com.kazox.autoreps.feature.setup.presentation.explanation.ExplanationScreen
 import com.kazox.autoreps.feature.workout.presentation.addEditWorkout.AddEditWorkoutScreen
 import com.kazox.autoreps.feature.workout.presentation.workouts.components.Workouts
 import org.koin.compose.viewmodel.koinViewModel
@@ -42,17 +43,22 @@ fun NavigationRoot(
 fun SetupNavDisplay(
     navigationViewModel: NavigationViewModel = koinViewModel()
 ) {
-    val topLevelBackStack = remember { TopLevelBackStack<Any>(DailyGoal) }
-
-    val coroutineScope = rememberCoroutineScope()
+    val topLevelBackStack = remember { TopLevelBackStack<Any>(Explanation) }
 
     NavDisplay(
         backStack = topLevelBackStack.backStack,
         onBack = { topLevelBackStack.removeLast() },
         entryProvider = entryProvider {
+            entry<Explanation>{
+                ExplanationScreen(
+                    onNext = {
+                        topLevelBackStack.add(DailyGoal)
+                    }
+                )
+            }
             entry<DailyGoal>{
                 DailyGoalScreen(
-                    onFinish = {
+                    onNext = {
                         navigationViewModel.updateSetupFinished()
                     }
                 )
@@ -62,7 +68,9 @@ fun SetupNavDisplay(
 }
 
 @Composable
-fun MainNavDisplay() {
+fun MainNavDisplay(
+    countRepsViewModel: CountRepsViewModel = koinViewModel(),
+) {
     val topLevelBackStack = remember { TopLevelBackStack<Any>(Home) }
 
     NavDisplay(
@@ -90,7 +98,9 @@ fun MainNavDisplay() {
                     values.workout.copy(), // copy to avoid mutation issues due to the navkey comparing serialized objects
                     values.reps.map { it.copy() },
                     onSaveNavigation = {
-                        topLevelBackStack.addTopLevel(Home)
+                        countRepsViewModel.resetState()
+                        topLevelBackStack.clearTopLevelStack(Record)
+                        topLevelBackStack.switchTopLevel(Home)
                     }
                 )
             }

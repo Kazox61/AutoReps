@@ -5,12 +5,12 @@ import androidx.lifecycle.viewModelScope
 import com.kazox.autoreps.core.PushupExercise
 import com.kazox.autoreps.core.domain.util.formatDuration
 import com.kazox.autoreps.feature.workout.domain.model.Rep
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Clock
@@ -23,6 +23,8 @@ class CountRepsViewModel() : ViewModel() {
     private val exercise = PushupExercise()
 
     private var duration = 0
+
+    private var timerJob: Job? = null
 
     init {
         viewModelScope.launch {
@@ -49,7 +51,8 @@ class CountRepsViewModel() : ViewModel() {
     }
 
     private fun startTimer() {
-        viewModelScope.launch {
+        timerJob?.cancel()
+        timerJob = viewModelScope.launch {
             while (true) {
                 delay(1000)
 
@@ -82,5 +85,13 @@ class CountRepsViewModel() : ViewModel() {
                 exercise.process(event.pose)
             }
         }
+    }
+
+    fun resetState() {
+        timerJob?.cancel()
+        timerJob = null
+
+        _state.value = CountRepsState()
+        duration = 0
     }
 }

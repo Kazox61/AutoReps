@@ -19,7 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import autoreps.composeapp.generated.resources.Res
-import autoreps.composeapp.generated.resources.finish
+import autoreps.composeapp.generated.resources.next
 import autoreps.composeapp.generated.resources.setup_daily_goal
 import com.kazox.autoreps.core.presentation.components.NumberWheelPicker
 import kotlinx.coroutines.launch
@@ -28,7 +28,7 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun DailyGoalScreen(
-    onFinish: () -> Unit,
+    onNext: () -> Unit,
     viewModel: DailyGoalViewModel = koinViewModel()
 ) {
     val dailyGoal by viewModel.dailyGoal.collectAsState()
@@ -62,11 +62,11 @@ fun DailyGoalScreen(
             )
 
             Button(
-                onClick = onFinish,
+                onClick = onNext,
                 shape = RoundedCornerShape(8.dp),
             ) {
                 Text(
-                    stringResource(Res.string.finish),
+                    stringResource(Res.string.next),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold
                 )

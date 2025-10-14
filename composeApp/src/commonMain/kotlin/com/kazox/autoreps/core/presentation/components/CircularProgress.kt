@@ -21,7 +21,10 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import autoreps.composeapp.generated.resources.Res
+import autoreps.composeapp.generated.resources.of
 import com.kazox.autoreps.core.presentation.theme.success
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun CircularProgress(
@@ -91,7 +94,7 @@ fun CircularProgress(
                 color = MaterialTheme.colorScheme.onSurface
             )
             Text(
-                text = "of $maxValue",
+                text = stringResource(Res.string.of) +" $maxValue",
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurface
             )

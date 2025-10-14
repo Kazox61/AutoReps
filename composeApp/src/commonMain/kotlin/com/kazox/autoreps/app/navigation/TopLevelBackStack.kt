@@ -6,53 +6,56 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 
-class TopLevelBackStack<T: Any>(startKey: T) {
-
-    // Maintain a stack for each top level route
-    private var topLevelStacks : LinkedHashMap<T, SnapshotStateList<T>> = linkedMapOf(
+class TopLevelBackStack<T: Any>(private val startKey: T) {
+    private var topLevelBackStacks: HashMap<T, SnapshotStateList<T>> = hashMapOf(
         startKey to mutableStateListOf(startKey)
     )
 
-    // Expose the current top level route for consumers
     var topLevelKey by mutableStateOf(startKey)
         private set
 
-    // Expose the back stack so it can be rendered by the NavDisplay
-    val backStack = mutableStateListOf(startKey)
+    val backStack = mutableStateListOf<T>(startKey)
 
-    private fun updateBackStack() =
-        backStack.apply {
-            clear()
-            addAll(topLevelStacks.flatMap { it.value })
-        }
+    private fun updateBackStack() {
+        backStack.clear()
+        val currentStack = topLevelBackStacks[topLevelKey] ?: emptyList()
 
-    fun addTopLevel(key: T){
-
-        // If the top level doesn't exist, add it
-        if (topLevelStacks[key] == null){
-            topLevelStacks.put(key, mutableStateListOf(key))
+        if (topLevelKey == startKey) {
+            backStack.addAll(currentStack)
         } else {
-            // Otherwise just move it to the end of the stacks
-            topLevelStacks.apply {
-                remove(key)?.let {
-                    put(key, it)
-                }
-            }
+            val startStack = topLevelBackStacks[startKey] ?: emptyList()
+            backStack.addAll(startStack + currentStack)
+        }
+    }
+
+    fun switchTopLevel(key: T) {
+        if (topLevelBackStacks[key] == null) {
+            topLevelBackStacks[key] = mutableStateListOf(key)
         }
         topLevelKey = key
         updateBackStack()
     }
 
-    fun add(key: T){
-        topLevelStacks[topLevelKey]?.add(key)
+    fun add(key: T) {
+        topLevelBackStacks[topLevelKey]?.add(key)
         updateBackStack()
     }
 
-    fun removeLast(){
-        val removedKey = topLevelStacks[topLevelKey]?.removeLastOrNull()
-        // If the removed key was a top level key, remove the associated top level stack
-        topLevelStacks.remove(removedKey)
-        topLevelKey = topLevelStacks.keys.last()
+    fun removeLast() {
+        val currentStack = topLevelBackStacks[topLevelKey] ?: return
+
+        if (currentStack.size > 1) {
+            currentStack.removeLastOrNull()
+        } else if (topLevelKey != startKey) {
+            topLevelKey = startKey
+        }
         updateBackStack()
+    }
+
+    fun clearTopLevelStack(key: T) {
+        topLevelBackStacks[key] = mutableStateListOf(key)
+        if (topLevelKey == key) {
+            updateBackStack()
+        }
     }
 }

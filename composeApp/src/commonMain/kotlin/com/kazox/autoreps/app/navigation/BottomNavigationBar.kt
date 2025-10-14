@@ -26,7 +26,7 @@ fun BottomNavigationBar(
             NavigationBarItem(
                 selected = selected,
                 onClick = {
-                    topLevelBackStack.addTopLevel(item)
+                    topLevelBackStack.switchTopLevel(item)
                 },
                 icon = {
                     Icon(

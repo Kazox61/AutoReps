@@ -1,4 +1,16 @@
 <resources>
+    <string name="home_screen_title">Start</string>
+    <string name="record_screen_title">Aufzeichnen</string>
+    <string name="workouts_screen_title">Workouts</string>
+    <string name="step_template">%1$s. Stritt</string>
+    <string-array name="explanation_texts">
+        <item>Gehe in die Liegestütz-Position.</item>
+        <item>Stelle das Smartphone so auf, dass deine Arme und Beine zu sehen sind.</item>
+        <item>Starte mit den Liegestützen. Diese werden automatisch über die Kamera erkannt.</item>
+    </string-array>
+    <string name="next">Weiter</string>
+    <string name="daily_goal">Tägliches Ziel</string>
+    <string name="of">von</string>
     <string name="save">Speichern</string>
     <string name="save_workout">Workout speichern</string>
     <string name="reps">Wiederholungen</string>

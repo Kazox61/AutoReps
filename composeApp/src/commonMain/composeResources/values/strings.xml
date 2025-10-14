@@ -1,7 +1,16 @@
 <resources>
-    <string name="home">Home</string>
-    <string name="record">Record</string>
-    <string name="exercises">Exercises</string>
+    <string name="home_screen_title">Home</string>
+    <string name="record_screen_title">Record</string>
+    <string name="workouts_screen_title">Workouts</string>
+    <string name="step_template">Step %1$s</string>
+    <string-array name="explanation_texts">
+        <item>Get into the push-up position.</item>
+        <item>Position the smartphone so that your arms and legs are visible.</item>
+        <item>Start with the push-ups. These are automatically recognized by the camera.</item>
+    </string-array>
+    <string name="next">Next</string>
+    <string name="daily_goal">Daily Goal</string>
+    <string name="of">of</string>
     <string name="save">Save</string>
     <string name="save_workout">Save Workout</string>
     <string name="reps">Reps</string>

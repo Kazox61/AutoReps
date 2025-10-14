@@ -36,6 +36,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import autoreps.composeapp.generated.resources.Res
+import autoreps.composeapp.generated.resources.finish
 import autoreps.composeapp.generated.resources.start
 import com.kazox.autoreps.core.PoseCameraView
 import com.kazox.autoreps.core.providePermissions
@@ -174,7 +175,7 @@ fun CountRepsScreen(
                             modifier = Modifier.padding(2.dp),
                         ) {
                             Text(
-                                text = "Stop",
+                                text = stringResource(Res.string.finish),
                                 style = MaterialTheme.typography.titleLarge,
                                 fontWeight = FontWeight.SemiBold
                             )

@@ -9,7 +9,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import autoreps.composeapp.generated.resources.Res
+import autoreps.composeapp.generated.resources.daily_goal
 import com.kazox.autoreps.core.presentation.components.CircularProgress
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun TodaysProgress(
@@ -22,7 +25,7 @@ fun TodaysProgress(
         verticalArrangement = Arrangement.spacedBy(32.dp),
     ) {
         Text(
-            "Daily Goal",
+            text = stringResource(Res.string.daily_goal),
             style = MaterialTheme.typography.titleLarge,
             color = MaterialTheme.colorScheme.onBackground
         )
