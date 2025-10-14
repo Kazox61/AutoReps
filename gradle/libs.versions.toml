@@ -17,8 +17,9 @@ sqlite = "2.6.1"
 koin = "4.1.1"
 kotlinxDatetime = "0.7.1"
 composeCharts = "0.2.0"
-calendar-compose = "2.8.0"
-datastorePreferencesCore = "1.1.7"
+calendar-compose = "2.9.0"
+settings = "1.3.0"
+datastorePreferences = "1.1.7"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -43,7 +44,10 @@ koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel", ver
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinxDatetime" }
 compose-charts = { module = "io.github.ehsannarmani:compose-charts", version.ref = "composeCharts" }
 calendar-compose = { module = "com.kizitonwose.calendar:compose-multiplatform", version.ref = "calendar-compose" }
-androidx-datastore-preferences-core = { group = "androidx.datastore", name = "datastore-preferences-core", version.ref = "datastorePreferencesCore" }
+settings = { module = "com.russhwolf:multiplatform-settings", version.ref = "settings" }
+settings-datastore = { module = "com.russhwolf:multiplatform-settings-datastore", version.ref = "settings" }
+settings-coroutines = { module = "com.russhwolf:multiplatform-settings-coroutines", version.ref = "settings" }
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

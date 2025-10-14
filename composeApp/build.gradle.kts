@@ -46,16 +46,14 @@ kotlin {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
-
             implementation(libs.androidx.camera.core)
             implementation(libs.androidx.camera.camera2)
             implementation(libs.androidx.camera.lifecycle)
             implementation(libs.androidx.camera.view)
-
             implementation(libs.mediapipe.tasks.vision)
-
             implementation(libs.koin.android)
             implementation(libs.koin.androidx.compose)
+            implementation(libs.androidx.datastore.preferences)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -76,10 +74,9 @@ kotlin {
             implementation(libs.kotlinx.datetime)
             implementation (libs.compose.charts)
             implementation(libs.calendar.compose)
-
-            implementation("com.russhwolf:multiplatform-settings:1.3.0")
-            implementation("com.russhwolf:multiplatform-settings-datastore:1.3.0")
-            implementation("com.russhwolf:multiplatform-settings-coroutines:1.3.0")
+            implementation(libs.settings)
+            implementation(libs.settings.datastore)
+            implementation(libs.settings.coroutines)
 
         }
         commonTest.dependencies {

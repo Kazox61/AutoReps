@@ -187,7 +187,7 @@ private fun processWorkoutData(
     dailyGoal: Int
 ): Map<LocalDate, RepsLevel> {
     return workouts
-        .groupBy { LocalDate.parse(it.startedAt.split(" ")[0]) }
+        .groupBy { LocalDate.parse(it.startedAt.split("T")[0]) }
         .mapValues { (_, dayWorkouts) ->
             val totalReps = dayWorkouts.sumOf { it.reps }
             val percentage = (totalReps.toFloat() / dailyGoal) * 100
