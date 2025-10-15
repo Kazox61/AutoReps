@@ -11,7 +11,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.kazox.autoreps.feature.workout.presentation.workouts.WorkoutsViewModel
-import com.kazox.autoreps.app.navigation.EditWorkout
+import com.kazox.autoreps.app.navigation.EditWorkoutKey
 import com.kazox.autoreps.app.navigation.TopLevelBackStack
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -33,7 +33,7 @@ fun Workouts(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable {
-                        topLevelBackStack.add(EditWorkout(
+                        topLevelBackStack.add(EditWorkoutKey(
                             workout,
                             reps
                         ))

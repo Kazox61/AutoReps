@@ -43,20 +43,20 @@ fun NavigationRoot(
 fun SetupNavDisplay(
     navigationViewModel: NavigationViewModel = koinViewModel()
 ) {
-    val topLevelBackStack = remember { TopLevelBackStack<Any>(Explanation) }
+    val topLevelBackStack = remember { TopLevelBackStack<Any>(ExplanationKey) }
 
     NavDisplay(
         backStack = topLevelBackStack.backStack,
         onBack = { topLevelBackStack.removeLast() },
         entryProvider = entryProvider {
-            entry<Explanation>{
+            entry<ExplanationKey> {
                 ExplanationScreen(
                     onNext = {
-                        topLevelBackStack.add(DailyGoal)
+                        topLevelBackStack.add(DailyGoalKey)
                     }
                 )
             }
-            entry<DailyGoal>{
+            entry<DailyGoalKey> {
                 DailyGoalScreen(
                     onNext = {
                         navigationViewModel.updateSetupFinished()
@@ -71,40 +71,40 @@ fun SetupNavDisplay(
 fun MainNavDisplay(
     countRepsViewModel: CountRepsViewModel = koinViewModel(),
 ) {
-    val topLevelBackStack = remember { TopLevelBackStack<Any>(Home) }
+    val topLevelBackStack = remember { TopLevelBackStack<Any>(HomeRoute) }
 
     NavDisplay(
         backStack = topLevelBackStack.backStack,
         onBack = { topLevelBackStack.removeLast() },
         entryProvider = entryProvider {
-            entry<Home>{
+            entry<HomeRoute>{
                 HomeScreen(
                     topLevelBackStack
                 )
             }
-            entry<Record>{
+            entry<RecordRoute>{
                 CountRepsScreen(
                     topLevelBackStack
                 )
             }
-            entry<Exercises>{
+            entry<WorkoutRoute>{
                 WorkoutsScreen(
                     topLevelBackStack
                 )
             }
-            entry<AddWorkout>{ values ->
+            entry<AddWorkoutKey>{ values ->
                 AddEditWorkoutScreen(
                     topLevelBackStack,
                     values.workout.copy(), // copy to avoid mutation issues due to the navkey comparing serialized objects
                     values.reps.map { it.copy() },
                     onSaveNavigation = {
                         countRepsViewModel.resetState()
-                        topLevelBackStack.clearTopLevelStack(Record)
-                        topLevelBackStack.switchTopLevel(Home)
+                        topLevelBackStack.clearTopLevelStack(RecordRoute)
+                        topLevelBackStack.switchTopLevel(HomeRoute)
                     }
                 )
             }
-            entry<EditWorkout> { values ->
+            entry<EditWorkoutKey> { values ->
                 AddEditWorkoutScreen(
                     topLevelBackStack,
                     values.workout.copy(), // copy to avoid mutation issues due to the navkey comparing serialized objects

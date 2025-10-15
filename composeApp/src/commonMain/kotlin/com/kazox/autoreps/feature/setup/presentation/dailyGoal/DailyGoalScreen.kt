@@ -1,6 +1,5 @@
 package com.kazox.autoreps.feature.setup.presentation.dailyGoal
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -34,42 +34,47 @@ fun DailyGoalScreen(
     val dailyGoal by viewModel.dailyGoal.collectAsState()
     val coroutineScope = rememberCoroutineScope()
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-            .padding(32.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(32.dp)
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        containerColor = MaterialTheme.colorScheme.background
+    ) { innerPadding ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .padding(32.dp),
+            contentAlignment = Alignment.Center
         ) {
-            Text(
-                stringResource(Res.string.setup_daily_goal),
-                style = MaterialTheme.typography.titleLarge,
-                color = MaterialTheme.colorScheme.onBackground,
-            )
-
-            NumberWheelPicker(
-                initial = dailyGoal,
-                to = 500,
-                onValueChanged = { newGoal ->
-                    coroutineScope.launch {
-                        viewModel.onEvent(DailyGoalEvent.UpdateDailyGoal(newGoal))
-                    }
-                }
-            )
-
-            Button(
-                onClick = onNext,
-                shape = RoundedCornerShape(8.dp),
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(32.dp)
             ) {
                 Text(
-                    stringResource(Res.string.next),
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold
+                    stringResource(Res.string.setup_daily_goal),
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.onBackground,
                 )
+
+                NumberWheelPicker(
+                    initial = dailyGoal,
+                    to = 500,
+                    onValueChanged = { newGoal ->
+                        coroutineScope.launch {
+                            viewModel.onEvent(DailyGoalEvent.UpdateDailyGoal(newGoal))
+                        }
+                    }
+                )
+
+                Button(
+                    onClick = onNext,
+                    shape = RoundedCornerShape(8.dp),
+                ) {
+                    Text(
+                        stringResource(Res.string.next),
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
             }
         }
     }

@@ -18,35 +18,35 @@ sealed interface TopLevelRoute {
     val description: StringResource
     val title: StringResource
 }
-data object Home : TopLevelRoute {
+data object HomeRoute : TopLevelRoute {
     override val icon = Res.drawable.house
     override val description = Res.string.home_screen_title
     override val title = Res.string.home_screen_title
 }
 
-data object Record : TopLevelRoute {
+data object RecordRoute : TopLevelRoute {
     override val icon = Res.drawable.record
     override val description = Res.string.record_screen_title
     override val title = Res.string.record_screen_title
 }
 
-data object Exercises : TopLevelRoute {
+data object WorkoutRoute : TopLevelRoute {
     override val icon = Res.drawable.dumbbell
     override val description = Res.string.workouts_screen_title
     override val title = Res.string.workouts_screen_title
 }
 
-val TOP_LEVEL_ROUTES : List<TopLevelRoute> = listOf(Home, Record, Exercises)
+val TOP_LEVEL_ROUTES : List<TopLevelRoute> = listOf(HomeRoute, RecordRoute, WorkoutRoute)
 
-data object Explanation
-data object DailyGoal
+data object ExplanationKey
+data object DailyGoalKey
 
-data class AddWorkout(
+data class AddWorkoutKey(
     val workout: Workout,
     val reps: List<Rep>
 )
 
-data class EditWorkout(
+data class EditWorkoutKey(
     val workout: Workout,
     val reps: List<Rep>
 )
