@@ -17,3 +17,10 @@ captures
 !*.xcworkspace/contents.xcworkspacedata
 **/xcshareddata/WorkspaceSettings.xcsettings
 node_modules/
+
+# goldie capture output
+goldie/out/
+
+# argent flow-run artifacts and local studio overrides
+.argent/recordings/
+goldie/goldie.design.json

@@ -31,6 +31,12 @@
       "skillPath": "skills/engineering/domain-modeling/SKILL.md",
       "computedHash": "a11713c0ff7870efa3c331b2e273f09116158485246edc89ae5088eefd1b0b48"
     },
+    "goldie": {
+      "source": "kacperkapusciak/goldie",
+      "sourceType": "github",
+      "skillPath": "skills/goldie/SKILL.md",
+      "computedHash": "34a7c3b851e41b642a17155c56d5b56f19f6fd6678e5c599716262e7af57d2fa"
+    },
     "grill-me": {
       "source": "mattpocock/skills",
       "sourceType": "github",

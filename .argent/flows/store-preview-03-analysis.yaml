@@ -1,0 +1,82 @@
+executionPrerequisite: >-
+  A recording is running on the record screen; the previous segment ended here.
+
+steps:
+  - echo: Leave the running workout — iOS uses the in-app edge gesture, Android the system back
+  - when:
+      platform: ios
+    steps:
+      - tool: gesture-swipe
+        args:
+          fromX: 0.03
+          fromY: 0.6
+          toX: 0.7
+          toY: 0.6
+          durationMs: 500
+  - when:
+      platform: android
+    steps:
+      - tool: button
+        args:
+          button: back
+  - echo: The discard dialog appears; discarding lands on the previous tab
+  - when:
+      platform: android
+    steps:
+      - await:
+          visible:
+            text: Verwerfen
+      - tap:
+          text: Verwerfen
+      - await:
+          visible:
+            text: Heute
+      - tap:
+          text: Verlauf
+      - await:
+          visible:
+            text: Morgen-Session
+      - tap:
+          text: Morgen-Session
+      - await:
+          visible:
+            text: Abfall
+      - tool: gesture-swipe
+        args:
+          fromX: 0.5
+          fromY: 0.78
+          toX: 0.5
+          toY: 0.28
+          durationMs: 700
+      - await:
+          visible:
+            text: Tempo
+      - await:
+          idle: true
+      - wait: 2200
+  - when:
+      platform: ios
+    steps:
+      - wait: 1000
+      - echo: Verwerfen button in the discard dialog, centre measured on iPhone 17 Pro Max
+      - tap:
+          x: 0.8035
+          y: 0.557
+      - wait: 1500
+      - echo: Verlauf tab, then the first history row, then scroll the Tempo chart into view
+      - tap:
+          x: 0.4135
+          y: 0.931
+      - wait: 1500
+      - tap:
+          x: 0.5
+          y: 0.1915
+      - wait: 1500
+      - tool: gesture-swipe
+        args:
+          fromX: 0.5
+          fromY: 0.78
+          toX: 0.5
+          toY: 0.28
+          durationMs: 700
+      - wait: 2500

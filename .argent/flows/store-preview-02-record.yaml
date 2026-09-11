@@ -1,0 +1,32 @@
+executionPrerequisite: >-
+  App on the populated home screen; the previous segment ended here.
+
+steps:
+  - echo: Tap the plus button into the record screen, let the ready state read, then start the workout
+  - when:
+      platform: android
+    steps:
+      - tap:
+          text: Workout aufzeichnen
+      - await:
+          visible:
+            text: Starten
+      - wait: 1500
+      - tap:
+          text: Starten
+      - await:
+          idle: true
+      - wait: 3500
+  - when:
+      platform: ios
+    steps:
+      - echo: Floating plus button, centre measured on iPhone 17 Pro Max
+      - tap:
+          x: 0.7315
+          y: 0.9305
+      - wait: 1600
+      - echo: Starten button, centre measured on iPhone 17 Pro Max
+      - tap:
+          x: 0.5
+          y: 0.9185
+      - wait: 4000

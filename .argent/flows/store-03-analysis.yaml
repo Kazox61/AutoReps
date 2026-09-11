@@ -1,0 +1,58 @@
+steps:
+  - launch:
+      ios: com.kazox.autoreps.AutoReps
+      android: com.kazox.autoreps
+  - echo: Home → Verlauf tab → today's named session opens the analysis screen; scroll the Tempo chart into view
+  - when:
+      platform: android
+    steps:
+      - await:
+          visible:
+            text: Workout aufzeichnen
+          timeout: 20000
+      - tap:
+          text: Verlauf
+      - await:
+          visible:
+            text: Morgen-Session
+      - tap:
+          text: Morgen-Session
+      - await:
+          visible:
+            text: Abfall
+      - tool: gesture-swipe
+        args:
+          fromX: 0.5
+          fromY: 0.78
+          toX: 0.5
+          toY: 0.28
+          durationMs: 700
+      - await:
+          visible:
+            text: Tempo
+      - await:
+          idle: true
+  - when:
+      platform: ios
+    steps:
+      - wait: 6000
+      - echo: Verlauf tab, then the first history row (today's session), centres on iPhone 17 Pro Max
+      - tap:
+          x: 0.4135
+          y: 0.931
+      - wait: 1500
+      - tap:
+          x: 0.5
+          y: 0.1915
+      - wait: 1500
+      - echo: Scroll the Tempo chart into view, then let the 900ms draw-in finish
+      - tool: gesture-swipe
+        args:
+          fromX: 0.5
+          fromY: 0.78
+          toX: 0.5
+          toY: 0.28
+          durationMs: 700
+      - wait: 1500
+      - await:
+          idle: true
