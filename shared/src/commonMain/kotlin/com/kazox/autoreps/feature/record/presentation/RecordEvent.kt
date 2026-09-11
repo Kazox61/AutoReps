@@ -8,6 +8,9 @@ sealed interface RecordEvent {
      */
     data class Saved(val workoutId: Int) : RecordEvent
 
-    /** Nothing was counted, so nothing was written and there is nothing to name. */
+    /**
+     * Leaving without a write: either nothing was counted, or the user confirmed the discard
+     * dialog. Either way there is nothing to name.
+     */
     data object Discarded : RecordEvent
 }

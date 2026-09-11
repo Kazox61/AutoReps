@@ -60,8 +60,8 @@ class RecordViewModel(
 
             RecordAction.FinishRecording -> finish()
 
-            RecordAction.ToggleDiagnostics ->
-                _state.update { it.copy(showDiagnostics = !it.showDiagnostics) }
+            RecordAction.TogglePreview ->
+                _state.update { it.copy(showPreview = !it.showPreview) }
 
             is RecordAction.CameraPermissionResult ->
                 _state.update {
@@ -70,6 +70,8 @@ class RecordViewModel(
                         permissionDenied = !action.granted,
                     )
                 }
+
+            RecordAction.Discard -> discard()
         }
     }
 
@@ -83,12 +85,10 @@ class RecordViewModel(
         // most *before* the set starts. canTrack, not `pose != null` — MediaPipe reports a pose
         // for a bare face, and a rep cannot be counted from one.
         val trackable = detector.canTrack(frame.pose)
-        val readings =
-            if (_state.value.showDiagnostics) detector.diagnose(frame.pose) else emptyList()
 
         // Frames keep arriving while paused — the preview stays live — but they must not count.
         if (!_state.value.isRecording) {
-            _state.update { it.copy(isPersonVisible = trackable, diagnostics = readings) }
+            _state.update { it.copy(isPersonVisible = trackable) }
             return
         }
 
@@ -106,7 +106,6 @@ class RecordViewModel(
                 repCount = session.repCount,
                 phase = detector.phase,
                 isPersonVisible = trackable,
-                diagnostics = readings,
                 elapsedMillis = session.elapsedMillis(frame.timestampMillis),
             )
         }
@@ -210,6 +209,17 @@ class RecordViewModel(
         )
 
     /**
+     * Leaves without a write, stopping the round clock with it. Nothing here is kept on
+     * purpose: this is the discard dialog's destructive half, not a pause.
+     */
+    private fun discard() {
+        emomJob?.cancel()
+        emomJob = null
+        _state.update { it.copy(status = RecordStatus.Idle, emom = null) }
+        viewModelScope.launch { _events.send(RecordEvent.Discarded) }
+    }
+
+    /**
      * Ends the set and persists it.
      *
      * The session is deliberately left intact until the write succeeds, so a failed save can be
@@ -218,19 +228,19 @@ class RecordViewModel(
     private fun finish() {
         if (_state.value.isSaving) return
 
-        emomJob?.cancel()
-        emomJob = null
-
         val reps = session.reps.toList()
         val elapsedMillis = _state.value.elapsedMillis
-        _state.update { it.copy(status = RecordStatus.Idle, emom = null) }
 
         if (reps.isEmpty()) {
             // No row for a set that never happened: an empty workout would still land in
-            // History and count towards the streak.
-            viewModelScope.launch { _events.send(RecordEvent.Discarded) }
+            // History and count towards the streak. Same exit as an explicit discard.
+            discard()
             return
         }
+
+        emomJob?.cancel()
+        emomJob = null
+        _state.update { it.copy(status = RecordStatus.Idle, emom = null) }
 
         // Set before launching, not inside: a second tap on Fertig must be rejected by the
         // guard above on the very next call, without depending on when the coroutine is run.

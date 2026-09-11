@@ -53,6 +53,7 @@ import com.kazox.ui.foundation.modifier.minTouchTarget
  * @property Ghost No background or border.
  * @property Destructive Soft red tint for dangerous actions.
  * @property Link Text link style.
+ * @property Success Solid success background, for actions that complete something positively.
  */
 public enum class ButtonVariant {
     Default,
@@ -61,6 +62,7 @@ public enum class ButtonVariant {
     Ghost,
     Destructive,
     Link,
+    Success,
 }
 
 // ─── Size ───────────────────────────────────────────────────
@@ -254,7 +256,7 @@ public object ButtonDefaults {
 /**
  * KazUI button — the primary interactive element.
  *
- * Supports 6 visual [variant]s, 4 [size]s, 3 press [animation]s,
+ * Supports 7 visual [variant]s, 4 [size]s, 3 press [animation]s,
  * a [loading] spinner state, and optional shape morphing on press.
  *
  * Children automatically inherit the correct foreground color via
@@ -271,7 +273,7 @@ public object ButtonDefaults {
  *
  * @param onClick Called when the button is clicked.
  * @param modifier Modifier applied to the button container.
- * @param variant Visual style — [ButtonVariant.Default], Outline, Secondary, Ghost, Destructive, Link.
+ * @param variant Visual style — [ButtonVariant.Default], Outline, Secondary, Ghost, Destructive, Link, Success.
  * @param size Touch target and padding — [ButtonSize.Default], Sm, Lg, Icon.
  * @param animation Press feedback — [ButtonAnimation.Scale], Bounce, None.
  * @param enabled Whether the button responds to input.
@@ -626,6 +628,16 @@ private fun resolveVariantColors(variant: ButtonVariant): ButtonColorValues {
                 disabledBorderColor = Color.Transparent,
                 hoverContainerColor = colors.primaryHover,
                 pressedContainerColor = colors.primaryPressed,
+            )
+
+        ButtonVariant.Success ->
+            ButtonColorValues(
+                containerColor = colors.success,
+                contentColor = colors.onSuccess,
+                borderColor = Color.Transparent,
+                disabledContainerColor = colors.success.copy(alpha = disabledAlpha),
+                disabledContentColor = colors.onSuccess.copy(alpha = 0.7f),
+                disabledBorderColor = Color.Transparent,
             )
     }
 }

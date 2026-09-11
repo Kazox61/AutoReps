@@ -1,7 +1,6 @@
 package com.kazox.autoreps.feature.record.presentation
 
 import androidx.compose.runtime.Stable
-import com.kazox.autoreps.feature.record.domain.PositionDiagnostics
 import com.kazox.autoreps.feature.record.domain.RepPhase
 
 /** Where the screen is in the start → count → finish cycle. */
@@ -27,18 +26,16 @@ data class RecordState(
     /**
      * Whether the camera can see everything the exercise needs — not merely "a person".
      *
-     * MediaPipe reports a pose for a face alone, so this cannot be `pose != null`: that hid the
-     * framing preview exactly when only a face was in shot, which is when it is most needed.
+     * MediaPipe reports a pose for a face alone, so this cannot be `pose != null`: that would
+     * report "ready" while only a face was in shot.
      *
      * Separate from [phase] on purpose: the detector only runs while recording, so phase stays
      * ABSENT before you press Start — but you still need to know whether the camera can see you
      * while getting into position.
      */
     val isPersonVisible: Boolean = false,
-    /** Live constraint readings, shown when [showDiagnostics] is on. */
-    val diagnostics: List<PositionDiagnostics> = emptyList(),
-    /** Developer readout for tuning thresholds against a real body. */
-    val showDiagnostics: Boolean = false,
+    /** Whether the camera preview is on screen, toggled by the eye in the corner. */
+    val showPreview: Boolean = false,
     val elapsedMillis: Long = 0,
     val status: RecordStatus = RecordStatus.Idle,
     /** Non-null only while an EMOM is running, so free-form sessions carry no round state at all. */

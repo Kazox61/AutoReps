@@ -91,7 +91,8 @@ public enum class AlertDialogAnimation {
  * @param label Accessibility pane title announced by screen readers. Defaults to "Alert Dialog".
  * @param animation [AlertDialogAnimation] style for enter/exit transitions. Defaults to [AlertDialogAnimation.FadeScale].
  * @param scrimColor [Color] of the backdrop overlay behind the dialog. Defaults to [KazTheme.colors.scrim].
- * @param maxWidth Maximum width of the dialog card. Defaults to 520.dp.
+ * @param maxWidth Maximum width of the dialog card. Defaults to 520.dp. A margin is always kept
+ *   around the card, so on screens narrower than the maximum it does not touch the edges.
  * @param content Composable content rendered inside the dialog card.
  */
 @Composable
@@ -184,7 +185,8 @@ public fun AlertDialog(
                                 } else {
                                     false
                                 }
-                            }.widthIn(max = maxWidth)
+                            }.padding(horizontal = spacing.lg)
+                                .widthIn(max = maxWidth)
                             .semantics(mergeDescendants = true) {
                                 paneTitle = label
                                 contentDescription = label
