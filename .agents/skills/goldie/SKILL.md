@@ -83,10 +83,10 @@ goldie is an npm package that bundles the CLI, the studio and a pinned argent
 driver. Nothing needs cloning; `npx` fetches it on first use:
 
 ```bash
-npx -y goldie@0 help
+npx -y goldie@0.3.1 help
 ```
 
-Every command below is `npx -y goldie@0 <cmd>`, referred to as `goldie`.
+Every command below is `npx -y goldie@0.3.1 <cmd>`, referred to as `goldie`.
 It needs Node 20+ and `ffmpeg` on the PATH (`brew install ffmpeg` on macOS,
 `winget install ffmpeg` on Windows, `apt install ffmpeg` on Linux). iOS
 devices need a macOS host; on Linux and Windows only the Android device
@@ -183,7 +183,7 @@ Shell state does not persist between your Bash calls, so prefix every goldie
 command with it:
 
 ```bash
-GOLDIE_CONFIG=<app-repo>/goldie/goldie.config.ts npx -y goldie@0 doctor
+GOLDIE_CONFIG=<app-repo>/goldie/goldie.config.ts npx -y goldie@0.3.1 doctor
 ```
 
 Fix everything doctor flags before capturing. The usual findings and their
@@ -193,9 +193,9 @@ argent video watermark flag, a screenshot scale override, and a Debug build.
 Then capture and render the stills (skip the video for now, it takes minutes):
 
 ```bash
-GOLDIE_CONFIG=... npx -y goldie@0 capture
-GOLDIE_CONFIG=... npx -y goldie@0 frame
-GOLDIE_CONFIG=... npx -y goldie@0 manifest
+GOLDIE_CONFIG=... npx -y goldie@0.3.1 capture
+GOLDIE_CONFIG=... npx -y goldie@0.3.1 frame
+GOLDIE_CONFIG=... npx -y goldie@0.3.1 manifest
 ```
 
 `capture` replays every flow, including the preview segments, so the raw clips
@@ -216,21 +216,21 @@ Start the studio in the background. It needs `GOLDIE_CONFIG` too, so it
 serves the app repo's `out/`:
 
 ```bash
-GOLDIE_CONFIG=... npx -y goldie@0 studio --no-open   # background task; serves http://localhost:4321
+GOLDIE_CONFIG=... npx -y goldie@0.3.1 studio --no-open   # background task; serves http://localhost:4321
 ```
 
 Tell the user it is up at http://localhost:4321. Then, also in the background,
 render the preview video so it appears on reload once done:
 
 ```bash
-GOLDIE_CONFIG=... npx -y goldie@0 preview && GOLDIE_CONFIG=... npx -y goldie@0 manifest
+GOLDIE_CONFIG=... npx -y goldie@0.3.1 preview && GOLDIE_CONFIG=... npx -y goldie@0.3.1 manifest
 ```
 
 If `preview` refuses because the total is outside 15 to 30 seconds, adjust
 segment pacing (`wait:` steps and `holdSeconds`) and re-capture only what
 changed.
 
-Finish with `GOLDIE_CONFIG=... npx -y goldie@0 verify` and report the result: which
+Finish with `GOLDIE_CONFIG=... npx -y goldie@0.3.1 verify` and report the result: which
 assets exist, where they are, and whether they pass Apple's rules. The
 studio's sidebar shows the same checks; a red row is a rule violation. The
 Design panel lets the user restyle backgrounds, layouts, bezels and fonts

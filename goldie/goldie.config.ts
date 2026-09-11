@@ -1,6 +1,9 @@
+import { fileURLToPath } from "node:url";
+import path from "node:path";
 import type { GoldieConfig } from "/opt/homebrew/lib/node_modules/goldie/dist/config.d.ts";
 
-const APP_ROOT = "/Users/florianpawelka/dev/AutoReps2";
+// goldie/ holds this config; the app repo is its parent directory.
+const APP_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
 const config: GoldieConfig = {
   appRoot: APP_ROOT,
@@ -39,12 +42,12 @@ const config: GoldieConfig = {
     developer: "Kazox",
     category: "Health & Fitness",
     rating: 5,
-    ratingCount: "12 Ratings",
+    ratingCount: "12 Bewertungen",
     ageRating: "4+",
-    price: "Free",
+    price: "Kostenlos",
     description: {
       "de-DE":
-        "AutoReps zählt deine Liegestütze – automatisch, per Kamera. Handy auf den Boden, loslegen: kein Tracker am Arm, kein Mitgezählt, kein Video.\n\n" +
+        "AutoReps zählt deine Liegestütze – automatisch, per Kamera. Handy auf den Boden, loslegen: kein Tracker am Arm, kein Mitzählen, kein Video.\n\n" +
         "Behalte Tagesziel, Serie und Fortschritt im Blick. Analysiere Tempo, Sätze und Pausen jeder Session und werde Workout für Workout stärker.",
     },
   },
