@@ -18,5 +18,12 @@ sealed interface RecordAction {
 
     data class CameraPermissionResult(val granted: Boolean) : RecordAction
 
-    data object ToggleDiagnostics : RecordAction
+    /** Shows or hides the camera preview, which is off while you are busy doing reps. */
+    data object TogglePreview : RecordAction
+
+    /**
+     * Leaves without saving, on the confirm dialog's say-so. Whatever the session counted is
+     * dropped on purpose — the dialog was explicit that it would be.
+     */
+    data object Discard : RecordAction
 }
