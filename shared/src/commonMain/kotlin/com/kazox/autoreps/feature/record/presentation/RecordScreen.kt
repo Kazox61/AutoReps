@@ -172,7 +172,9 @@ fun RecordScreen(
                 ) {
                     Text(
                         text = state.saveError ?: statusLabel(state),
-                        variant = TextVariant.Muted,
+                        // Lead, not Muted: this line is read from about a metre away, mid-set,
+                        // so the standard helper size is illegible there.
+                        variant = TextVariant.Lead,
                         // Unspecified leaves the variant's own colour alone, which is the normal case.
                         color = if (state.saveError != null) KazTheme.colors.destructive else Color.Unspecified,
                         textAlign = TextAlign.Center,
@@ -180,13 +182,13 @@ fun RecordScreen(
                     // A failed save keeps the reps in the view model, so the same button retries
                     // rather than dropping back to "Starten" — which would wipe the set.
                     val retrying = state.saveError != null
+                    val actionLabel =
+                        when {
+                            retrying -> "Erneut speichern"
+                            state.isRecording -> "Fertig"
+                            else -> "Starten"
+                        }
                     Button(
-                        text =
-                            when {
-                                retrying -> "Erneut speichern"
-                                state.isRecording -> "Fertig"
-                                else -> "Starten"
-                            },
                         onClick = {
                             onAction(
                                 when {
@@ -198,6 +200,7 @@ fun RecordScreen(
                         enabled = !state.isSaving,
                         loading = state.isSaving,
                         size = ButtonSize.Lg,
+                        label = actionLabel,
                         variant =
                             when {
                                 retrying -> ButtonVariant.Secondary
@@ -208,10 +211,12 @@ fun RecordScreen(
                                     ButtonVariant.Success
                                 else -> ButtonVariant.Default
                             },
-                        // The one control on this screen, and it is operated after a workout —
-                        // a full-width, hand-tall target rather than the standard button height.
+                        // The one control on this screen, operated after a workout: a full-width,
+                        // hand-tall target with text sized to be read from a metre away.
                         modifier = Modifier.fillMaxWidth().height(56.dp),
-                    )
+                    ) {
+                        Text(text = actionLabel, style = KazTheme.typography.large)
+                    }
                 }
             }
 
