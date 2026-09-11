@@ -1,0 +1,30 @@
+steps:
+  - launch:
+      ios: com.kazox.autoreps.AutoReps
+      android: com.kazox.autoreps
+  - echo: Home → Verlauf tab, the five weeks of seeded sessions
+  - when:
+      platform: android
+    steps:
+      - await:
+          visible:
+            text: Workout aufzeichnen
+          timeout: 20000
+      - tap:
+          text: Verlauf
+      - await:
+          visible:
+            text: Morgen-Session
+      - await:
+          idle: true
+  - when:
+      platform: ios
+    steps:
+      - wait: 6000
+      - echo: Verlauf tab centre on iPhone 17 Pro Max
+      - tap:
+          x: 0.4135
+          y: 0.931
+      - wait: 1500
+      - await:
+          idle: true

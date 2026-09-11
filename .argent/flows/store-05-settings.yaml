@@ -1,0 +1,31 @@
+steps:
+  - launch:
+      ios: com.kazox.autoreps.AutoReps
+      android: com.kazox.autoreps
+  - echo: Home → Einstellungen tab (daily goal, EMOM, sound)
+  - when:
+      platform: android
+    steps:
+      - await:
+          visible:
+            text: Workout aufzeichnen
+          timeout: 20000
+      - tap:
+          text: Einstellungen
+      - wait: 2000
+      - await:
+          visible:
+            text: Tagesziel
+      - await:
+          idle: true
+  - when:
+      platform: ios
+    steps:
+      - wait: 6000
+      - echo: Einstellungen tab centre on iPhone 17 Pro Max
+      - tap:
+          x: 0.5585
+          y: 0.931
+      - wait: 3000
+      - await:
+          idle: true

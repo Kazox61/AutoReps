@@ -1,0 +1,20 @@
+steps:
+  - echo: Home with seeded demo data. Android uses text selectors; iOS waits (the flow tree cannot see Compose)
+  - launch:
+      ios: com.kazox.autoreps.AutoReps
+      android: com.kazox.autoreps
+  - when:
+      platform: android
+    steps:
+      - await:
+          visible:
+            text: Noch 32 Wiederholungen
+          timeout: 20000
+      - await:
+          idle: true
+  - when:
+      platform: ios
+    steps:
+      - wait: 6000
+      - await:
+          idle: true

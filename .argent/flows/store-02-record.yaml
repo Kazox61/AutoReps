@@ -1,0 +1,47 @@
+steps:
+  - echo: Pre-grant camera so the record screen never shows a permission dialog
+  - when:
+      platform: ios
+    steps:
+      - tool: settings-permissions
+        args:
+          action: grant
+          permission: camera
+          bundleId: com.kazox.autoreps.AutoReps
+  - when:
+      platform: android
+    steps:
+      - tool: settings-permissions
+        args:
+          action: grant
+          permission: camera
+          bundleId: com.kazox.autoreps
+  - launch:
+      ios: com.kazox.autoreps.AutoReps
+      android: com.kazox.autoreps
+  - echo: Home settled, then into the record screen via the floating plus button
+  - when:
+      platform: android
+    steps:
+      - await:
+          visible:
+            text: Workout aufzeichnen
+          timeout: 20000
+      - tap:
+          text: Workout aufzeichnen
+      - await:
+          visible:
+            text: Starten
+      - await:
+          idle: true
+  - when:
+      platform: ios
+    steps:
+      - wait: 6000
+      - echo: Floating plus button, centre measured on iPhone 17 Pro Max
+      - tap:
+          x: 0.7315
+          y: 0.9305
+      - wait: 1500
+      - await:
+          idle: true

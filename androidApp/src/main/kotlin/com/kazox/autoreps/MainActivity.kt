@@ -16,6 +16,9 @@ class MainActivity : ComponentActivity() {
         // app theme is known, the DisposableEffect below corrects it.
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
+        // Before the first frame: the home screen should load fully populated, not watch the
+        // seed land. No-op off emulators — see isStoreCaptureDevice().
+        seedDemoDataForStoreCaptures()
 
         setContent {
             // enableEdgeToEdge above only knows the system's dark mode, but the app renders its
