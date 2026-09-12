@@ -82,3 +82,7 @@ dependencies {
 room {
     schemaDirectory("$projectDir/schemas")
 }
+
+compose.resources {
+    packageOfResClass = "com.kazox.autoreps.resources"
+}

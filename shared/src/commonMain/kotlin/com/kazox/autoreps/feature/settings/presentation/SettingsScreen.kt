@@ -19,6 +19,37 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.kazox.autoreps.core.domain.model.ThemeChoice
+import com.kazox.autoreps.resources.Res
+import com.kazox.autoreps.resources.action_cancel
+import com.kazox.autoreps.resources.action_delete
+import com.kazox.autoreps.resources.action_less
+import com.kazox.autoreps.resources.action_more
+import com.kazox.autoreps.resources.settings_daily_goal
+import com.kazox.autoreps.resources.settings_daily_goal_hint
+import com.kazox.autoreps.resources.settings_delete_all
+import com.kazox.autoreps.resources.settings_delete_all_message
+import com.kazox.autoreps.resources.settings_delete_all_title
+import com.kazox.autoreps.resources.settings_emom
+import com.kazox.autoreps.resources.settings_emom_hint
+import com.kazox.autoreps.resources.settings_emom_interval
+import com.kazox.autoreps.resources.settings_emom_interval_hint
+import com.kazox.autoreps.resources.settings_emom_warning
+import com.kazox.autoreps.resources.settings_emom_warning_hint
+import com.kazox.autoreps.resources.settings_group_appearance
+import com.kazox.autoreps.resources.settings_group_emom
+import com.kazox.autoreps.resources.settings_group_goal
+import com.kazox.autoreps.resources.settings_group_sound
+import com.kazox.autoreps.resources.settings_group_training
+import com.kazox.autoreps.resources.settings_rest_seconds
+import com.kazox.autoreps.resources.settings_rest_seconds_hint
+import com.kazox.autoreps.resources.settings_sound_per_rep
+import com.kazox.autoreps.resources.settings_sound_per_rep_hint
+import com.kazox.autoreps.resources.settings_theme
+import com.kazox.autoreps.resources.settings_title
+import com.kazox.autoreps.resources.settings_warning_off
+import com.kazox.autoreps.resources.theme_dark
+import com.kazox.autoreps.resources.theme_light
+import com.kazox.autoreps.resources.theme_system
 import com.kazox.ui.components.alertdialog.AlertDialog
 import com.kazox.ui.components.alertdialog.AlertDialogAction
 import com.kazox.ui.components.alertdialog.AlertDialogActionVariant
@@ -39,6 +70,7 @@ import com.kazox.ui.components.togglegroup.ToggleGroup
 import com.kazox.ui.components.togglegroup.ToggleGroupItem
 import com.kazox.ui.components.topappbar.TopAppBar
 import com.kazox.ui.foundation.KazTheme
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -62,7 +94,7 @@ fun SettingsScreen(
     onAction: (SettingsAction) -> Unit,
 ) {
     Scaffold(
-        topBar = { TopAppBar(title = "Einstellungen") },
+        topBar = { TopAppBar(title = stringResource(Res.string.settings_title)) },
         bottomBar = bottomBar,
         overlayBottomBar = true,
     ) { padding ->
@@ -80,10 +112,10 @@ fun SettingsScreen(
                     ),
             verticalArrangement = Arrangement.spacedBy(KazTheme.spacing.lg),
         ) {
-            SettingsGroup("Ziel") {
+            SettingsGroup(stringResource(Res.string.settings_group_goal)) {
                 StepperRow(
-                    label = "Tagesziel",
-                    hint = "Wiederholungen pro Tag",
+                    label = stringResource(Res.string.settings_daily_goal),
+                    hint = stringResource(Res.string.settings_daily_goal_hint),
                     value = state.settings.dailyGoal,
                     range = 10..500,
                     step = 5,
@@ -91,10 +123,10 @@ fun SettingsScreen(
                 )
             }
 
-            SettingsGroup("Training") {
+            SettingsGroup(stringResource(Res.string.settings_group_training)) {
                 StepperRow(
-                    label = "Satzpause",
-                    hint = "Sekunden Pause, ab denen ein neuer Satz beginnt",
+                    label = stringResource(Res.string.settings_rest_seconds),
+                    hint = stringResource(Res.string.settings_rest_seconds_hint),
                     value = state.settings.restSeconds,
                     range = 5..60,
                     step = 5,
@@ -102,10 +134,10 @@ fun SettingsScreen(
                 )
             }
 
-            SettingsGroup("EMOM") {
+            SettingsGroup(stringResource(Res.string.settings_group_emom)) {
                 SwitchRow(
-                    label = "EMOM",
-                    hint = "Jede Runde startet zur vollen Minute",
+                    label = stringResource(Res.string.settings_emom),
+                    hint = stringResource(Res.string.settings_emom_hint),
                     checked = state.settings.emomEnabled,
                     onCheckedChange = { onAction(SettingsAction.EmomEnabled(it)) },
                 )
@@ -118,8 +150,8 @@ fun SettingsScreen(
                     Column {
                         Separator()
                         StepperRow(
-                            label = "Intervall",
-                            hint = "Sekunden pro Runde",
+                            label = stringResource(Res.string.settings_emom_interval),
+                            hint = stringResource(Res.string.settings_emom_interval_hint),
                             value = state.settings.emomIntervalSeconds,
                             range = 30..300,
                             step = 15,
@@ -127,40 +159,40 @@ fun SettingsScreen(
                         )
                         Separator()
                         ChoiceRow(
-                            label = "Vorwarnung",
+                            label = stringResource(Res.string.settings_emom_warning),
                             // Three short tones then a different one at zero: the pitch change
                             // carries the "go", so the count does not have to be followed.
-                            hint = "Kurze Töne vor dem Rundenstart, dann ein anderer Ton bei 0",
-                            options = WARNING_OPTIONS.map { it.second },
-                            selectedIndex = WARNING_OPTIONS.indexOfFirst { it.first == state.settings.emomWarningSeconds }
+                            hint = stringResource(Res.string.settings_emom_warning_hint),
+                            options = warningOptionLabels(),
+                            selectedIndex = WARNING_CHOICES.indexOfFirst { it == state.settings.emomWarningSeconds }
                                 .coerceAtLeast(0),
-                            onSelect = { onAction(SettingsAction.EmomWarningChanged(WARNING_OPTIONS[it].first)) },
+                            onSelect = { onAction(SettingsAction.EmomWarningChanged(WARNING_CHOICES[it])) },
                         )
                     }
                 }
             }
 
-            SettingsGroup("Ton") {
+            SettingsGroup(stringResource(Res.string.settings_group_sound)) {
                 SwitchRow(
-                    label = "Ton pro Wiederholung",
-                    hint = "Du siehst den Zähler nicht, wenn du unten bist",
+                    label = stringResource(Res.string.settings_sound_per_rep),
+                    hint = stringResource(Res.string.settings_sound_per_rep_hint),
                     checked = state.settings.soundPerRep,
                     onCheckedChange = { onAction(SettingsAction.SoundPerRepChanged(it)) },
                 )
             }
 
-            SettingsGroup("Darstellung") {
+            SettingsGroup(stringResource(Res.string.settings_group_appearance)) {
                 ChoiceRow(
-                    label = "Design",
+                    label = stringResource(Res.string.settings_theme),
                     hint = null,
-                    options = ThemeChoice.entries.map { it.label },
+                    options = themeChoiceLabels(),
                     selectedIndex = state.settings.theme.ordinal,
                     onSelect = { onAction(SettingsAction.ThemeChanged(ThemeChoice.entries[it])) },
                 )
             }
 
             Button(
-                text = "Alle Daten löschen",
+                text = stringResource(Res.string.settings_delete_all),
                 onClick = { onAction(SettingsAction.DeleteAllData) },
                 variant = ButtonVariant.Destructive,
                 modifier = Modifier.fillMaxWidth(),
@@ -192,18 +224,16 @@ private fun DeleteAllDataDialog(
         // Dismissing mid-delete would leave the dialog's own buttons behind a wipe still running.
         onDismiss = { if (!isDeleting) onDismiss() },
         onConfirm = onConfirm,
-        label = "Alle Daten löschen",
+        label = stringResource(Res.string.settings_delete_all),
     ) {
         AlertDialogHeader(
-            title = "Alle Daten löschen?",
-            description =
-                "Jedes aufgezeichnete Workout und alle Einstellungen werden gelöscht. " +
-                    "Das lässt sich nicht rückgängig machen.",
+            title = stringResource(Res.string.settings_delete_all_title),
+            description = stringResource(Res.string.settings_delete_all_message),
         )
         AlertDialogFooter {
-            AlertDialogCancel(onClick = onDismiss, text = "Abbrechen")
+            AlertDialogCancel(onClick = onDismiss, text = stringResource(Res.string.action_cancel))
             AlertDialogAction(
-                text = "Löschen",
+                text = stringResource(Res.string.action_delete),
                 onClick = onConfirm,
                 variant = AlertDialogActionVariant.Destructive,
             )
@@ -211,16 +241,23 @@ private fun DeleteAllDataDialog(
     }
 }
 
-/** German labels for the theme choices, which the domain enum has no business carrying. */
-private val ThemeChoice.label: String
-    get() =
-        when (this) {
-            ThemeChoice.Light -> "Hell"
-            ThemeChoice.Dark -> "Dunkel"
-            ThemeChoice.System -> "System"
-        }
+/** Localized labels for the theme choices, ordered to match [ThemeChoice.entries]. */
+@Composable
+private fun themeChoiceLabels(): List<String> =
+    listOf(
+        stringResource(Res.string.theme_light),
+        stringResource(Res.string.theme_dark),
+        stringResource(Res.string.theme_system),
+    )
 
-private val WARNING_OPTIONS = listOf(0 to "Aus", 3 to "3 s", 5 to "5 s")
+/** Countdown choices in seconds, ordered to match [themeChoiceLabels]' "Off" handling. */
+private val WARNING_CHOICES = listOf(0, 3, 5)
+
+@Composable
+private fun warningOptionLabels(): List<String> =
+    WARNING_CHOICES.map { seconds ->
+        if (seconds == 0) stringResource(Res.string.settings_warning_off) else "${seconds} s"
+    }
 
 // ─── Rows ─────────────────────────────────────────────────────
 
@@ -273,8 +310,8 @@ private fun StepperRow(
             variant = StepperVariant.Outline,
             label = label,
             valueFormatter = formatValue,
-            decreaseDescription = "Weniger",
-            increaseDescription = "Mehr",
+            decreaseDescription = stringResource(Res.string.action_less),
+            increaseDescription = stringResource(Res.string.action_more),
         )
     }
 }

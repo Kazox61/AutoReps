@@ -32,6 +32,39 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.kazox.autoreps.core.domain.model.Workout
+import com.kazox.autoreps.resources.Res
+import com.kazox.autoreps.resources.home_goal_reached
+import com.kazox.autoreps.resources.home_heatmap_less
+import com.kazox.autoreps.resources.home_heatmap_more
+import com.kazox.autoreps.resources.home_recent
+import com.kazox.autoreps.resources.home_reps_to_go
+import com.kazox.autoreps.resources.home_stat_best
+import com.kazox.autoreps.resources.home_stat_total
+import com.kazox.autoreps.resources.home_stat_week
+import com.kazox.autoreps.resources.home_streak
+import com.kazox.autoreps.resources.home_streak_days
+import com.kazox.autoreps.resources.home_today
+import com.kazox.autoreps.resources.home_today_progress
+import com.kazox.autoreps.resources.month_april
+import com.kazox.autoreps.resources.month_august
+import com.kazox.autoreps.resources.month_december
+import com.kazox.autoreps.resources.month_february
+import com.kazox.autoreps.resources.month_january
+import com.kazox.autoreps.resources.month_july
+import com.kazox.autoreps.resources.month_june
+import com.kazox.autoreps.resources.month_march
+import com.kazox.autoreps.resources.month_may
+import com.kazox.autoreps.resources.month_november
+import com.kazox.autoreps.resources.month_october
+import com.kazox.autoreps.resources.month_september
+import com.kazox.autoreps.resources.reps_count
+import com.kazox.autoreps.resources.weekday_1
+import com.kazox.autoreps.resources.weekday_2
+import com.kazox.autoreps.resources.weekday_3
+import com.kazox.autoreps.resources.weekday_4
+import com.kazox.autoreps.resources.weekday_5
+import com.kazox.autoreps.resources.weekday_6
+import com.kazox.autoreps.resources.weekday_7
 import com.kazox.ui.components.card.Card
 import com.kazox.ui.components.scaffold.Scaffold
 import com.kazox.ui.components.separator.Separator
@@ -43,6 +76,8 @@ import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
+import org.jetbrains.compose.resources.pluralStringResource
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import kotlin.math.max
 
@@ -124,11 +159,16 @@ private fun TodayCard(state: HomeState) {
                 )
             }
             Column(verticalArrangement = Arrangement.spacedBy(KazTheme.spacing.xs)) {
-                Text(text = "Heute", variant = TextVariant.Muted)
-                Text(text = "${state.todayReps} von ${state.dailyGoal}", variant = TextVariant.H3)
+                Text(text = stringResource(Res.string.home_today), variant = TextVariant.Muted)
+                Text(text = stringResource(Res.string.home_today_progress, state.todayReps, state.dailyGoal), variant = TextVariant.H3)
                 val remaining = max(0, state.dailyGoal - state.todayReps)
                 Text(
-                    text = if (remaining == 0) "Tagesziel erreicht" else "Noch $remaining Wiederholungen",
+                    text =
+                        if (remaining == 0) {
+                            stringResource(Res.string.home_goal_reached)
+                        } else {
+                            pluralStringResource(Res.plurals.home_reps_to_go, remaining, remaining)
+                        },
                     variant = TextVariant.Small,
                     color = if (remaining == 0) KazTheme.colors.success else KazTheme.colors.onMuted,
                 )
@@ -147,13 +187,13 @@ private fun StreakCard(state: HomeState) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(KazTheme.spacing.xs),
         ) {
-            Text(text = "Serie", variant = TextVariant.Muted)
+            Text(text = stringResource(Res.string.home_streak), variant = TextVariant.Muted)
             Text(
                 text = state.streak.toString(),
                 style = TextStyle(fontSize = 72.sp, fontWeight = FontWeight.Bold),
             )
             Text(
-                text = if (state.streak == 1) "Tag in Folge" else "Tage in Folge",
+                text = pluralStringResource(Res.plurals.home_streak_days, state.streak),
                 variant = TextVariant.Large,
             )
         }
@@ -165,9 +205,9 @@ private fun StreakCard(state: HomeState) {
 @Composable
 private fun StatRow(state: HomeState) {
     Row(horizontalArrangement = Arrangement.spacedBy(KazTheme.spacing.sm)) {
-        StatTile("7 Tage", formatCount(state.weekTotal), Modifier.weight(1f))
-        StatTile("Bestwert", formatCount(state.bestDay), Modifier.weight(1f))
-        StatTile("Gesamt", formatCount(state.lifetimeReps), Modifier.weight(1f))
+        StatTile(stringResource(Res.string.home_stat_week), formatCount(state.weekTotal), Modifier.weight(1f))
+        StatTile(stringResource(Res.string.home_stat_best), formatCount(state.bestDay), Modifier.weight(1f))
+        StatTile(stringResource(Res.string.home_stat_total), formatCount(state.lifetimeReps), Modifier.weight(1f))
     }
 }
 
@@ -207,12 +247,12 @@ private fun MonthCard(
             verticalArrangement = Arrangement.spacedBy(KazTheme.spacing.sm),
         ) {
             Text(
-                text = "${MONTH_NAMES[today.monthNumber - 1]} ${today.year}",
+                text = "${monthNames()[today.monthNumber - 1]} ${today.year}",
                 variant = TextVariant.H3,
             )
 
             Row(modifier = Modifier.fillMaxWidth()) {
-                WEEKDAY_INITIALS.forEach {
+                weekdayInitials().forEach {
                     Text(
                         text = it,
                         variant = TextVariant.Small,
@@ -302,7 +342,7 @@ private fun HeatmapLegend() {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(4.dp),
     ) {
-        Text(text = "weniger", variant = TextVariant.Small, color = KazTheme.colors.onMuted)
+        Text(text = stringResource(Res.string.home_heatmap_less), variant = TextVariant.Small, color = KazTheme.colors.onMuted)
         listOf(0f, 0.25f, 0.5f, 0.75f, 1f).forEach { level ->
             Box(
                 Modifier
@@ -319,7 +359,7 @@ private fun HeatmapLegend() {
                     ),
             )
         }
-        Text(text = "mehr", variant = TextVariant.Small, color = KazTheme.colors.onMuted)
+        Text(text = stringResource(Res.string.home_heatmap_more), variant = TextVariant.Small, color = KazTheme.colors.onMuted)
     }
 }
 
@@ -334,7 +374,7 @@ private fun RecentCard(state: HomeState) {
             Modifier.padding(KazTheme.spacing.md),
             verticalArrangement = Arrangement.spacedBy(KazTheme.spacing.sm),
         ) {
-            Text(text = "Zuletzt", variant = TextVariant.H3)
+            Text(text = stringResource(Res.string.home_recent), variant = TextVariant.H3)
             state.recentWorkouts.forEachIndexed { index, workout ->
                 if (index > 0) Separator()
                 RecentRow(workout)
@@ -350,7 +390,7 @@ private fun RecentRow(workout: Workout) {
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Text(text = formatDate(workout.startedAt), variant = TextVariant.P)
-        Text(text = "${workout.reps} Wdh.", variant = TextVariant.P)
+        Text(text = stringResource(Res.string.reps_count, workout.reps), variant = TextVariant.P)
     }
 }
 
@@ -406,17 +446,39 @@ private fun formatCount(value: Int): String =
 /** Lowest fill a day with any reps gets, so one rep is still visibly different from none. */
 private const val HEATMAP_MIN_ALPHA = 0.25f
 
-private val WEEKDAY_INITIALS = listOf("M", "D", "M", "D", "F", "S", "S")
-
-private val MONTH_NAMES =
+@Composable
+private fun weekdayInitials(): List<String> =
     listOf(
-        "Januar", "Februar", "März", "April", "Mai", "Juni",
-        "Juli", "August", "September", "Oktober", "November", "Dezember",
+        stringResource(Res.string.weekday_1),
+        stringResource(Res.string.weekday_2),
+        stringResource(Res.string.weekday_3),
+        stringResource(Res.string.weekday_4),
+        stringResource(Res.string.weekday_5),
+        stringResource(Res.string.weekday_6),
+        stringResource(Res.string.weekday_7),
+    )
+
+@Composable
+private fun monthNames(): List<String> =
+    listOf(
+        stringResource(Res.string.month_january),
+        stringResource(Res.string.month_february),
+        stringResource(Res.string.month_march),
+        stringResource(Res.string.month_april),
+        stringResource(Res.string.month_may),
+        stringResource(Res.string.month_june),
+        stringResource(Res.string.month_july),
+        stringResource(Res.string.month_august),
+        stringResource(Res.string.month_september),
+        stringResource(Res.string.month_october),
+        stringResource(Res.string.month_november),
+        stringResource(Res.string.month_december),
     )
 
 /** `2026-08-27T18:30:00` renders as `27. August`; falls back to the raw value. */
-private fun formatDate(startedAt: String): String =
-    runCatching {
-        val date = LocalDate.parse(startedAt.substringBefore('T'))
-        "${date.day}. ${MONTH_NAMES[date.monthNumber - 1]}"
-    }.getOrDefault(startedAt)
+@Composable
+private fun formatDate(startedAt: String): String {
+    val parsed = runCatching { LocalDate.parse(startedAt.substringBefore('T')) }.getOrNull()
+        ?: return startedAt
+    return "${parsed.day}. ${monthNames()[parsed.monthNumber - 1]}"
+}

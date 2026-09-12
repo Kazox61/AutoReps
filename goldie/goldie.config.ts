@@ -19,8 +19,10 @@ const config: GoldieConfig = {
   },
 
   devices: ["iphone-6.9", "pixel-10-pro"],
-  // The app ships German-only, so the store copy is German too.
-  locales: ["de-DE"],
+  // The app ships German and English (Compose Resources follows the device
+  // locale). Raw captures happen once per device per pass — see
+  // goldie.de.config.ts / goldie.en.config.ts and README "Capturing both languages".
+  locales: ["de-DE", "en-US"],
   appearance: "light",
 
   // Silver bezel — the app is a monochrome zinc design, silver contrasts without competing.
@@ -38,7 +40,10 @@ const config: GoldieConfig = {
 
   store: {
     name: "AutoReps",
-    subtitle: { "de-DE": "Liegestütze automatisch zählen" },
+    subtitle: {
+      "de-DE": "Liegestütze automatisch zählen",
+      "en-US": "Count push-ups automatically",
+    },
     developer: "Kazox",
     category: "Health & Fitness",
     rating: 5,
@@ -49,6 +54,9 @@ const config: GoldieConfig = {
       "de-DE":
         "AutoReps zählt deine Liegestütze – automatisch, per Kamera. Handy auf den Boden, loslegen: kein Tracker am Arm, kein Mitzählen, kein Video.\n\n" +
         "Behalte Tagesziel, Serie und Fortschritt im Blick. Analysiere Tempo, Sätze und Pausen jeder Session und werde Workout für Workout stärker.",
+      "en-US":
+        "AutoReps counts your push-ups – automatically, with the camera. Put your phone on the floor and go: no tracker on your arm, no counting, no video.\n\n" +
+        "Keep your daily goal, streak and progress in view. Analyze pace, sets and breaks of every session and get stronger workout by workout.",
     },
   },
 
@@ -58,38 +66,38 @@ const config: GoldieConfig = {
       id: "home",
       flow: "store-01-home",
       layout: "hero",
-      headline: { "de-DE": "Immer wissen, wo du stehst" },
-      subhead: { "de-DE": "Tagesziel, Serie und Fortschritt auf einen Blick." },
+      headline: { "de-DE": "Immer wissen, wo du stehst", "en-US": "Always know where you stand" },
+      subhead: { "de-DE": "Tagesziel, Serie und Fortschritt auf einen Blick.", "en-US": "Daily goal, streak and progress at a glance." },
     },
     {
       kind: "screenshot",
       id: "record",
       flow: "store-02-record",
-      headline: { "de-DE": "Einfach loslegen" },
-      subhead: { "de-DE": "Die Kamera zählt mit – du machst nur die Liegestütze." },
+      headline: { "de-DE": "Einfach loslegen", "en-US": "Just get started" },
+      subhead: { "de-DE": "Die Kamera zählt mit – du machst nur die Liegestütze.", "en-US": "The camera counts — you just do the push-ups." },
     },
     {
       kind: "screenshot",
       id: "analysis",
       flow: "store-03-analysis",
-      headline: { "de-DE": "Werde Session für Session stärker" },
-      subhead: { "de-DE": "Tempo, Abfall und Pausen – jede Session ausgewertet." },
+      headline: { "de-DE": "Werde Session für Session stärker", "en-US": "Stronger session by session" },
+      subhead: { "de-DE": "Tempo, Abfall und Pausen – jede Session ausgewertet.", "en-US": "Pace, drop-off and breaks — every session analyzed." },
     },
     {
       kind: "screenshot",
       id: "history",
       flow: "store-04-history",
       layout: "offset",
-      headline: { "de-DE": "Nichts geht verloren" },
-      subhead: { "de-DE": "Jede Session mit Datum, Dauer und Wiederholungen." },
+      headline: { "de-DE": "Nichts geht verloren", "en-US": "Nothing gets lost" },
+      subhead: { "de-DE": "Jede Session mit Datum, Dauer und Wiederholungen.", "en-US": "Every session with date, duration and reps." },
     },
     {
       kind: "screenshot",
       id: "settings",
       flow: "store-05-settings",
       layout: "hero",
-      headline: { "de-DE": "Dein Training, deine Regeln" },
-      subhead: { "de-DE": "Tagesziel, Satzpause und EMOM – alles verstellbar." },
+      headline: { "de-DE": "Dein Training, deine Regeln", "en-US": "Your training, your rules" },
+      subhead: { "de-DE": "Tagesziel, Satzpause und EMOM – alles verstellbar.", "en-US": "Daily goal, rest time and EMOM — all adjustable." },
     },
     {
       kind: "preview",

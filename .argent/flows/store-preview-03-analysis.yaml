@@ -23,24 +23,24 @@ steps:
   - when:
       platform: android
     steps:
-      - await:
-          visible:
-            text: Verwerfen
+      - wait: 1500
+      - echo: Discard button, right-aligned in the dialog — tap point sits inside it for both the English and German label lengths (measured on Pixel 10 Pro)
       - tap:
-          text: Verwerfen
-      - await:
-          visible:
-            text: Heute
+          x: 0.8594
+          y: 0.5471
+      - wait: 1500
+      - echo: History tab, then the first history row, then scroll the Tempo chart into view
       - tap:
-          text: Verlauf
+          x: 0.4109
+          y: 0.9412
+      - wait: 1500
       - await:
           visible:
             text: Morgen-Session
       - tap:
-          text: Morgen-Session
-      - await:
-          visible:
-            text: Abfall
+          x: 0.5
+          y: 0.1814
+      - wait: 1500
       - tool: gesture-swipe
         args:
           fromX: 0.5

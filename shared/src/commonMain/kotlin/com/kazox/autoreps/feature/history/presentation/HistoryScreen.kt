@@ -20,6 +20,12 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.kazox.autoreps.core.domain.model.Workout
+import com.kazox.autoreps.resources.Res
+import com.kazox.autoreps.resources.history_empty_hint
+import com.kazox.autoreps.resources.history_empty_title
+import com.kazox.autoreps.resources.history_title
+import com.kazox.autoreps.resources.history_workout_fallback
+import com.kazox.autoreps.resources.reps_count
 import com.kazox.ui.components.card.Card
 import com.kazox.ui.components.card.CardAnimation
 import com.kazox.ui.components.icon.Icon
@@ -32,6 +38,7 @@ import com.kazox.ui.components.text.TextVariant
 import com.kazox.ui.components.topappbar.TopAppBar
 import com.kazox.ui.foundation.KazTheme
 import kotlinx.datetime.LocalDateTime
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -58,7 +65,7 @@ fun HistoryScreen(
     onAction: (HistoryAction) -> Unit,
 ) {
     Scaffold(
-        topBar = { TopAppBar(title = "Verlauf") },
+        topBar = { TopAppBar(title = stringResource(Res.string.history_title)) },
         bottomBar = bottomBar,
         // Rows scroll behind the floating bar rather than stopping above it, staying visible
         // through the gaps around the capsule. In exchange the body owns its own bottom
@@ -108,7 +115,7 @@ private fun WorkoutRow(
         modifier = Modifier.fillMaxWidth(),
         onClick = onClick,
         animation = CardAnimation.Press,
-        label = workout.name ?: "Workout",
+        label = workout.name ?: stringResource(Res.string.history_workout_fallback),
     ) {
         Row(
             modifier = Modifier.fillMaxWidth().padding(KazTheme.spacing.md),
@@ -120,7 +127,7 @@ private fun WorkoutRow(
                 verticalArrangement = Arrangement.spacedBy(KazTheme.spacing.xs),
             ) {
                 Text(
-                    text = workout.name?.takeIf { it.isNotBlank() } ?: "Workout",
+                    text = workout.name?.takeIf { it.isNotBlank() } ?: stringResource(Res.string.history_workout_fallback),
                     variant = TextVariant.Large,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
@@ -135,7 +142,7 @@ private fun WorkoutRow(
 
             Column(horizontalAlignment = Alignment.End) {
                 Text(
-                    text = "${workout.reps} Wdh.",
+                    text = stringResource(Res.string.reps_count, workout.reps),
                     variant = TextVariant.P,
                     maxLines = 1,
                 )
@@ -210,9 +217,9 @@ private fun EmptyState(
             size = IconSize.Xl,
             modifier = Modifier.size(48.dp),
         )
-        Text(text = "Noch keine Workouts", variant = TextVariant.Large)
+        Text(text = stringResource(Res.string.history_empty_title), variant = TextVariant.Large)
         Text(
-            text = "Tippe auf +, um dein erstes Workout aufzuzeichnen.",
+            text = stringResource(Res.string.history_empty_hint),
             variant = TextVariant.Muted,
         )
     }

@@ -273,8 +273,9 @@ class RecordViewModel(
                 _state.update { it.copy(isSaving = false) }
                 _events.send(RecordEvent.Saved(workoutId))
             } catch (e: Exception) {
+                // Raw cause only — the screen composes the localized message around it.
                 _state.update {
-                    it.copy(isSaving = false, saveError = "Speichern fehlgeschlagen: ${e.message}")
+                    it.copy(isSaving = false, saveError = e.message ?: "")
                 }
             }
         }

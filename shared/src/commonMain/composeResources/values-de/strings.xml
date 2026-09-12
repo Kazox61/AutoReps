@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <!-- ─── Navigation ─────────────────────────────────────────── -->
+    <string name="nav_home">Home</string>
+    <string name="nav_history">Verlauf</string>
+    <string name="nav_settings">Einstellungen</string>
+    <string name="nav_record_workout">Workout aufzeichnen</string>
+
+    <!-- ─── Shared units ───────────────────────────────────────── -->
+    <string name="reps_count">%1$d Wdh.</string>
+    <string name="unit_reps_short">Wdh.</string>
+    <string name="unit_avg">Ø</string>
+    <string name="unit_sec_per_rep">s / Wdh.</string>
+
+    <!-- ─── Errors ─────────────────────────────────────────────── -->
+    <string name="error_save_failed">Speichern fehlgeschlagen: %1$s</string>
+
+    <!-- ─── Home ───────────────────────────────────────────────── -->
+    <string name="home_today">Heute</string>
+    <string name="home_today_progress">%1$d von %2$d</string>
+    <string name="home_goal_reached">Tagesziel erreicht</string>
+    <plurals name="home_reps_to_go">
+        <item quantity="one">Noch %1$d Wiederholung</item>
+        <item quantity="other">Noch %1$d Wiederholungen</item>
+    </plurals>
+    <string name="home_streak">Serie</string>
+    <plurals name="home_streak_days">
+        <item quantity="one">Tag in Folge</item>
+        <item quantity="other">Tage in Folge</item>
+    </plurals>
+    <string name="home_stat_week">7 Tage</string>
+    <string name="home_stat_best">Bestwert</string>
+    <string name="home_stat_total">Gesamt</string>
+    <string name="home_heatmap_less">weniger</string>
+    <string name="home_heatmap_more">mehr</string>
+    <string name="home_recent">Zuletzt</string>
+
+    <string name="month_january">Januar</string>
+    <string name="month_february">Februar</string>
+    <string name="month_march">März</string>
+    <string name="month_april">April</string>
+    <string name="month_may">Mai</string>
+    <string name="month_june">Juni</string>
+    <string name="month_july">Juli</string>
+    <string name="month_august">August</string>
+    <string name="month_september">September</string>
+    <string name="month_october">Oktober</string>
+    <string name="month_november">November</string>
+    <string name="month_december">Dezember</string>
+
+    <string name="weekday_1">M</string>
+    <string name="weekday_2">D</string>
+    <string name="weekday_3">M</string>
+    <string name="weekday_4">D</string>
+    <string name="weekday_5">F</string>
+    <string name="weekday_6">S</string>
+    <string name="weekday_7">S</string>
+
+    <!-- ─── History ────────────────────────────────────────────── -->
+    <string name="history_title">Verlauf</string>
+    <string name="history_workout_fallback">Workout</string>
+    <string name="history_empty_title">Noch keine Workouts</string>
+    <string name="history_empty_hint">Tippe auf +, um dein erstes Workout aufzuzeichnen.</string>
+
+    <!-- ─── Record ─────────────────────────────────────────────── -->
+    <string name="record_position_top">Oben</string>
+    <string name="record_position_bottom">Unten</string>
+    <string name="record_status_moving">Bewegung</string>
+    <string name="record_status_ready">Bereit</string>
+    <string name="record_status_not_in_frame">Nicht ganz im Bild</string>
+    <string name="record_action_start">Starten</string>
+    <string name="record_action_finish">Fertig</string>
+    <string name="record_action_retry_save">Erneut speichern</string>
+    <string name="record_toggle_camera">Kamera anzeigen</string>
+    <string name="record_round">Runde %1$d</string>
+    <string name="record_discard_label">Training abbrechen</string>
+    <string name="record_discard_header">Training abbrechen?</string>
+    <string name="record_discard_message">Die gezählten Wiederholungen werden nicht gespeichert.</string>
+    <string name="record_discard_continue">Weiter trainieren</string>
+    <string name="record_discard_discard">Verwerfen</string>
+    <string name="record_permission_title">Kamera benötigt</string>
+    <string name="record_permission_rationale">AutoReps zählt deine Liegestütze über die Kamera. Es werden keine Videos gespeichert.</string>
+    <string name="record_permission_denied_hint">Ohne Kamerazugriff können Liegestütze nicht gezählt werden. Du kannst ihn in den Einstellungen erlauben.</string>
+    <string name="record_camera_unavailable">Aufzeichnung ist nur auf Android und iOS verfügbar.</string>
+
+    <!-- ─── Add/Edit workout ───────────────────────────────────── -->
+    <string name="workout_edit_title">Workout bearbeiten</string>
+    <string name="workout_name">Workout-Name</string>
+    <string name="workout_stat_reps">Wdh.</string>
+    <string name="workout_stat_sets">Sätze</string>
+    <string name="workout_stat_duration">Dauer</string>
+    <string name="workout_stat_dropoff">Abfall</string>
+    <string name="workout_trend_title">Verlauf</string>
+    <string name="workout_trend_subtitle">Wiederholungen pro Satz gegenüber Ø</string>
+    <string name="workout_rest_title">Pausen</string>
+    <string name="workout_rest_subtitle">Erholung zwischen den Sätzen</string>
+    <string name="workout_rest_work">Arbeit</string>
+    <string name="workout_rest_rest">Pause</string>
+    <string name="workout_rest_avg">Ø Pause</string>
+    <string name="workout_comparison_title">Gegenüber letztem Mal</string>
+    <string name="workout_comparison_change">Veränderung</string>
+    <string name="workout_comparison_before">Damals</string>
+    <string name="workout_comparison_reps_delta">%1$s%2$d Wdh.</string>
+    <string name="workout_comparison_percent">%1$s%2$d%%</string>
+    <string name="workout_cadence_title">Tempo</string>
+    <string name="workout_cadence_subtitle">Sekunden pro Wiederholung</string>
+    <string name="workout_cadence_avg">Ø Tempo</string>
+    <string name="workout_cadence_fastest">Schnellste</string>
+    <string name="workout_cadence_slowest">Langsamste</string>
+    <string name="workout_empty_title">Keine Daten</string>
+    <string name="workout_empty_hint">Dieses Workout hat noch keine Wiederholungen. Nimm es auf, um Diagramme zu sehen.</string>
+
+    <!-- ─── Settings ───────────────────────────────────────────── -->
+    <string name="settings_title">Einstellungen</string>
+    <string name="settings_group_goal">Ziel</string>
+    <string name="settings_daily_goal">Tagesziel</string>
+    <string name="settings_daily_goal_hint">Wiederholungen pro Tag</string>
+    <string name="settings_group_training">Training</string>
+    <string name="settings_rest_seconds">Satzpause</string>
+    <string name="settings_rest_seconds_hint">Sekunden Pause, ab denen ein neuer Satz beginnt</string>
+    <string name="settings_group_emom">EMOM</string>
+    <string name="settings_emom">EMOM</string>
+    <string name="settings_emom_hint">Jede Runde startet zur vollen Minute</string>
+    <string name="settings_emom_interval">Intervall</string>
+    <string name="settings_emom_interval_hint">Sekunden pro Runde</string>
+    <string name="settings_emom_warning">Vorwarnung</string>
+    <string name="settings_emom_warning_hint">Kurze Töne vor dem Rundenstart, dann ein anderer Ton bei 0</string>
+    <string name="settings_warning_off">Aus</string>
+    <string name="settings_group_sound">Ton</string>
+    <string name="settings_sound_per_rep">Ton pro Wiederholung</string>
+    <string name="settings_sound_per_rep_hint">Du siehst den Zähler nicht, wenn du unten bist</string>
+    <string name="settings_group_appearance">Darstellung</string>
+    <string name="settings_theme">Design</string>
+    <string name="theme_light">Hell</string>
+    <string name="theme_dark">Dunkel</string>
+    <string name="theme_system">System</string>
+    <string name="settings_delete_all">Alle Daten löschen</string>
+    <string name="settings_delete_all_title">Alle Daten löschen?</string>
+    <string name="settings_delete_all_message">Jedes aufgezeichnete Workout und alle Einstellungen werden gelöscht. Das lässt sich nicht rückgängig machen.</string>
+    <string name="action_cancel">Abbrechen</string>
+    <string name="action_delete">Löschen</string>
+    <string name="action_save">Speichern</string>
+    <string name="action_back">Zurück</string>
+    <string name="action_less">Weniger</string>
+    <string name="action_more">Mehr</string>
+</resources>
