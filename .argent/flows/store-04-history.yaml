@@ -2,16 +2,18 @@ steps:
   - launch:
       ios: com.kazox.autoreps.AutoReps
       android: com.kazox.autoreps
-  - echo: Home → Verlauf tab, the five weeks of seeded sessions
+  - echo: Home → history tab, the five weeks of seeded sessions
   - when:
       platform: android
     steps:
       - await:
           visible:
-            text: Workout aufzeichnen
+            text: "68"
           timeout: 20000
+      - echo: History tab, centre measured via uiautomator on Pixel 10 Pro
       - tap:
-          text: Verlauf
+          x: 0.4109
+          y: 0.9412
       - await:
           visible:
             text: Morgen-Session

@@ -45,6 +45,26 @@ import com.kazox.autoreps.feature.record.domain.RepPhase
 import com.kazox.autoreps.feature.record.presentation.camera.PoseCameraView
 import com.kazox.autoreps.feature.record.presentation.camera.PoseFrame
 import com.kazox.autoreps.feature.record.presentation.camera.rememberCameraPermissionController
+import com.kazox.autoreps.resources.Res
+import com.kazox.autoreps.resources.error_save_failed
+import com.kazox.autoreps.resources.record_action_finish
+import com.kazox.autoreps.resources.record_action_retry_save
+import com.kazox.autoreps.resources.record_action_start
+import com.kazox.autoreps.resources.record_discard_continue
+import com.kazox.autoreps.resources.record_discard_discard
+import com.kazox.autoreps.resources.record_discard_header
+import com.kazox.autoreps.resources.record_discard_label
+import com.kazox.autoreps.resources.record_discard_message
+import com.kazox.autoreps.resources.record_permission_denied_hint
+import com.kazox.autoreps.resources.record_permission_rationale
+import com.kazox.autoreps.resources.record_permission_title
+import com.kazox.autoreps.resources.record_position_bottom
+import com.kazox.autoreps.resources.record_position_top
+import com.kazox.autoreps.resources.record_round
+import com.kazox.autoreps.resources.record_status_moving
+import com.kazox.autoreps.resources.record_status_not_in_frame
+import com.kazox.autoreps.resources.record_status_ready
+import com.kazox.autoreps.resources.record_toggle_camera
 import com.kazox.ui.components.alertdialog.AlertDialog
 import com.kazox.ui.components.alertdialog.AlertDialogAction
 import com.kazox.ui.components.alertdialog.AlertDialogActionVariant
@@ -60,14 +80,11 @@ import com.kazox.ui.components.scaffold.Scaffold
 import com.kazox.ui.components.text.Text
 import com.kazox.ui.components.text.TextVariant
 import com.kazox.ui.foundation.KazTheme
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 /** Fixed size — the preview is for checking your framing, not for watching yourself. */
 private val CameraWidth = 108.dp
-
-// Position names for the status line. The detector's [start, end] order.
-private const val TopLabel = "Oben"
-private const val BottomLabel = "Unten"
 
 @Composable
 fun RecordRoot(
@@ -171,7 +188,8 @@ fun RecordScreen(
                     verticalArrangement = Arrangement.spacedBy(KazTheme.spacing.sm),
                 ) {
                     Text(
-                        text = state.saveError ?: statusLabel(state),
+                        text = state.saveError?.let { stringResource(Res.string.error_save_failed, it) }
+                            ?: statusLabel(state),
                         // Lead, not Muted: this line is read from about a metre away, mid-set,
                         // so the standard helper size is illegible there.
                         variant = TextVariant.Lead,
@@ -184,9 +202,9 @@ fun RecordScreen(
                     val retrying = state.saveError != null
                     val actionLabel =
                         when {
-                            retrying -> "Erneut speichern"
-                            state.isRecording -> "Fertig"
-                            else -> "Starten"
+                            retrying -> stringResource(Res.string.record_action_retry_save)
+                            state.isRecording -> stringResource(Res.string.record_action_finish)
+                            else -> stringResource(Res.string.record_action_start)
                         }
                     Button(
                         onClick = {
@@ -227,7 +245,7 @@ fun RecordScreen(
                 onClick = { onAction(RecordAction.TogglePreview) },
                 variant = ButtonVariant.Ghost,
                 size = ButtonSize.Icon,
-                label = "Kamera anzeigen",
+                label = stringResource(Res.string.record_toggle_camera),
                 modifier = Modifier.align(Alignment.TopStart),
             ) {
                 Icon(imageVector = KazIcons.Eye, contentDescription = null)
@@ -318,17 +336,17 @@ private fun DiscardDialog(
         open = open,
         onDismiss = onDismiss,
         onConfirm = onConfirm,
-        label = "Training abbrechen",
+        label = stringResource(Res.string.record_discard_label),
     ) {
         AlertDialogHeader(
-            title = "Training abbrechen?",
-            description = "Die gezählten Wiederholungen werden nicht gespeichert.",
+            title = stringResource(Res.string.record_discard_header),
+            description = stringResource(Res.string.record_discard_message),
         )
         AlertDialogFooter {
-            // Not "Abbrechen" — that is the word for the thing being confirmed.
-            AlertDialogCancel(onClick = onDismiss, text = "Weiter trainieren")
+            // Not the cancel word — that is the word for the thing being confirmed.
+            AlertDialogCancel(onClick = onDismiss, text = stringResource(Res.string.record_discard_continue))
             AlertDialogAction(
-                text = "Verwerfen",
+                text = stringResource(Res.string.record_discard_discard),
                 onClick = onConfirm,
                 variant = AlertDialogActionVariant.Destructive,
             )
@@ -376,21 +394,22 @@ private fun RepCounter(
 @Composable
 private fun EmomProgressLine(emom: EmomState) {
     Text(
-        text = "Runde ${emom.round}",
+        text = stringResource(Res.string.record_round, emom.round),
         variant = TextVariant.Muted,
         textAlign = TextAlign.Center,
     )
 }
 
+@Composable
 private fun statusLabel(state: RecordState): String =
     when {
         // Framing stays the first thing said: the seconds are there precisely so the shot can
-        // still be fixed, and "Mach dich bereit" would hide that it needs fixing.
-        !state.isPersonVisible -> "Nicht ganz im Bild"
-        !state.isRecording -> "Bereit"
-        state.phase == RepPhase.START -> TopLabel
-        state.phase == RepPhase.END -> BottomLabel
-        else -> "Bewegung"
+        // still be fixed, and "get ready" would hide that it needs fixing.
+        !state.isPersonVisible -> stringResource(Res.string.record_status_not_in_frame)
+        !state.isRecording -> stringResource(Res.string.record_status_ready)
+        state.phase == RepPhase.START -> stringResource(Res.string.record_position_top)
+        state.phase == RepPhase.END -> stringResource(Res.string.record_position_bottom)
+        else -> stringResource(Res.string.record_status_moving)
     }
 
 private fun formatElapsed(elapsedMillis: Long): String {
@@ -405,13 +424,13 @@ private fun PermissionBody(denied: Boolean) {
         verticalArrangement = Arrangement.spacedBy(KazTheme.spacing.sm, Alignment.CenterVertically),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Text(text = "Kamera benötigt", variant = TextVariant.Large)
+        Text(text = stringResource(Res.string.record_permission_title), variant = TextVariant.Large)
         Text(
             text =
                 if (denied) {
-                    "Ohne Kamerazugriff können Liegestütze nicht gezählt werden. Du kannst ihn in den Einstellungen erlauben."
+                    stringResource(Res.string.record_permission_denied_hint)
                 } else {
-                    "AutoReps zählt deine Liegestütze über die Kamera. Es werden keine Videos gespeichert."
+                    stringResource(Res.string.record_permission_rationale)
                 },
             variant = TextVariant.Muted,
             textAlign = TextAlign.Center,

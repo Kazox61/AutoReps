@@ -2,20 +2,22 @@ steps:
   - launch:
       ios: com.kazox.autoreps.AutoReps
       android: com.kazox.autoreps
-  - echo: Home → Einstellungen tab (daily goal, EMOM, sound)
+  - echo: Home → settings tab (daily goal, EMOM, sound)
   - when:
       platform: android
     steps:
       - await:
           visible:
-            text: Workout aufzeichnen
+            text: "68"
           timeout: 20000
+      - echo: Settings tab, centre measured via uiautomator on Pixel 10 Pro; "EMOM" is untranslated, so it gates the screen in every locale
       - tap:
-          text: Einstellungen
+          x: 0.5609
+          y: 0.9412
       - wait: 2000
       - await:
           visible:
-            text: Tagesziel
+            text: EMOM
       - await:
           idle: true
   - when:

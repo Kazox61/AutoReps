@@ -22,6 +22,39 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.kazox.autoreps.core.domain.model.Rep
 import com.kazox.autoreps.core.domain.model.Workout
 import com.kazox.autoreps.core.presentation.ObserveAsEvents
+import com.kazox.autoreps.resources.Res
+import com.kazox.autoreps.resources.action_back
+import com.kazox.autoreps.resources.action_save
+import com.kazox.autoreps.resources.error_save_failed
+import com.kazox.autoreps.resources.reps_count
+import com.kazox.autoreps.resources.unit_avg
+import com.kazox.autoreps.resources.unit_reps_short
+import com.kazox.autoreps.resources.unit_sec_per_rep
+import com.kazox.autoreps.resources.workout_cadence_avg
+import com.kazox.autoreps.resources.workout_cadence_fastest
+import com.kazox.autoreps.resources.workout_cadence_slowest
+import com.kazox.autoreps.resources.workout_cadence_subtitle
+import com.kazox.autoreps.resources.workout_cadence_title
+import com.kazox.autoreps.resources.workout_comparison_before
+import com.kazox.autoreps.resources.workout_comparison_change
+import com.kazox.autoreps.resources.workout_comparison_percent
+import com.kazox.autoreps.resources.workout_comparison_reps_delta
+import com.kazox.autoreps.resources.workout_comparison_title
+import com.kazox.autoreps.resources.workout_edit_title
+import com.kazox.autoreps.resources.workout_empty_hint
+import com.kazox.autoreps.resources.workout_empty_title
+import com.kazox.autoreps.resources.workout_name
+import com.kazox.autoreps.resources.workout_rest_avg
+import com.kazox.autoreps.resources.workout_rest_rest
+import com.kazox.autoreps.resources.workout_rest_subtitle
+import com.kazox.autoreps.resources.workout_rest_title
+import com.kazox.autoreps.resources.workout_rest_work
+import com.kazox.autoreps.resources.workout_stat_dropoff
+import com.kazox.autoreps.resources.workout_stat_duration
+import com.kazox.autoreps.resources.workout_stat_reps
+import com.kazox.autoreps.resources.workout_stat_sets
+import com.kazox.autoreps.resources.workout_trend_subtitle
+import com.kazox.autoreps.resources.workout_trend_title
 import com.kazox.ui.components.button.Button
 import com.kazox.ui.components.button.ButtonSize
 import com.kazox.ui.components.button.ButtonVariant
@@ -48,6 +81,7 @@ import ir.ehsannarmani.compose_charts.models.IndicatorCount
 import ir.ehsannarmani.compose_charts.models.LabelHelperProperties
 import ir.ehsannarmani.compose_charts.models.LabelProperties
 import ir.ehsannarmani.compose_charts.models.Line
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -90,13 +124,13 @@ fun AddEditWorkoutScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = "Workout bearbeiten",
+                title = stringResource(Res.string.workout_edit_title),
                 navigationIcon = {
                     Button(
                         onClick = onBack,
                         variant = ButtonVariant.Ghost,
                         size = ButtonSize.Icon,
-                        label = "Zurück",
+                        label = stringResource(Res.string.action_back),
                     ) {
                         Icon(imageVector = KazIcons.ArrowLeft, contentDescription = null)
                     }
@@ -106,7 +140,7 @@ fun AddEditWorkoutScreen(
                         onClick = { onAction(AddEditWorkoutAction.SaveWorkout) },
                         variant = ButtonVariant.Ghost,
                         size = ButtonSize.Icon,
-                        label = "Speichern",
+                        label = stringResource(Res.string.action_save),
                         enabled = state.workout != null && !state.isSaving,
                         loading = state.isSaving,
                     ) {
@@ -155,11 +189,11 @@ private fun ContentBody(
         Input(
             value = state.name,
             onValueChange = { onAction(AddEditWorkoutAction.EnteredName(it)) },
-            placeholder = "Workout-Name",
-            label = "Workout-Name",
+            placeholder = stringResource(Res.string.workout_name),
+            label = stringResource(Res.string.workout_name),
             singleLine = true,
             isError = state.saveError != null,
-            errorMessage = state.saveError.orEmpty(),
+            errorMessage = state.saveError?.let { stringResource(Res.string.error_save_failed, it) }.orEmpty(),
         )
 
         if (workout == null || perSet.isEmpty()) {
@@ -183,13 +217,13 @@ private fun StatTiles(
     reps: List<Rep>,
 ) {
     Row(horizontalArrangement = Arrangement.spacedBy(KazTheme.spacing.sm)) {
-        StatTile(label = "Wdh.", value = workout.reps.toString(), modifier = Modifier.weight(1f))
-        StatTile(label = "Sätze", value = perSet.size.toString(), modifier = Modifier.weight(1f))
+        StatTile(label = stringResource(Res.string.workout_stat_reps), value = workout.reps.toString(), modifier = Modifier.weight(1f))
+        StatTile(label = stringResource(Res.string.workout_stat_sets), value = perSet.size.toString(), modifier = Modifier.weight(1f))
     }
     Row(horizontalArrangement = Arrangement.spacedBy(KazTheme.spacing.sm)) {
-        StatTile(label = "Dauer", value = formatDuration(workout.duration), modifier = Modifier.weight(1f))
+        StatTile(label = stringResource(Res.string.workout_stat_duration), value = formatDuration(workout.duration), modifier = Modifier.weight(1f))
         StatTile(
-            label = "Abfall",
+            label = stringResource(Res.string.workout_stat_dropoff),
             value = formatDropOff(remember(reps) { dropOff(reps) }),
             modifier = Modifier.weight(1f),
         )
@@ -223,25 +257,27 @@ private fun TrendCard(
 
     Card {
         CardHeader {
-            Text(text = "Verlauf", variant = TextVariant.H3)
-            Text(text = "Wiederholungen pro Satz gegenüber Ø", variant = TextVariant.Muted)
+            Text(text = stringResource(Res.string.workout_trend_title), variant = TextVariant.H3)
+            Text(text = stringResource(Res.string.workout_trend_subtitle), variant = TextVariant.Muted)
         }
         CardContent {
             // Keyed on perSet (structurally comparable, unlike SolidColor): rebuilt when the
             // reps actually change, reused verbatim on every other recomposition — that is
             // what keeps typing in the name field from replaying the entry animation.
+            val repsLabel = stringResource(Res.string.unit_reps_short)
+            val avgLabel = stringResource(Res.string.unit_avg)
             val data =
-                remember(perSet) {
+                remember(perSet, repsLabel, avgLabel) {
                     listOf(
                         Line(
-                            label = "Wdh.",
+                            label = repsLabel,
                             values = perSet.map { it.toDouble() },
                             color = primaryBrush,
                             strokeAnimationSpec = tween(900, easing = EaseInOutCubic),
                             drawStyle = DrawStyle.Stroke(2.dp),
                         ),
                         Line(
-                            label = "Ø",
+                            label = avgLabel,
                             values = List(perSet.size) { average },
                             color = averageBrush,
                             strokeAnimationSpec = tween(900),
@@ -293,8 +329,8 @@ private fun RestCard(
 
     Card {
         CardHeader {
-            Text(text = "Pausen", variant = TextVariant.H3)
-            Text(text = "Erholung zwischen den Sätzen", variant = TextVariant.Muted)
+            Text(text = stringResource(Res.string.workout_rest_title), variant = TextVariant.H3)
+            Text(text = stringResource(Res.string.workout_rest_subtitle), variant = TextVariant.Muted)
         }
         CardContent {
             // Work vs rest — the same split Strava draws as moving time vs elapsed time.
@@ -302,10 +338,10 @@ private fun RestCard(
                 modifier = Modifier.fillMaxWidth().padding(bottom = KazTheme.spacing.sm),
                 horizontalArrangement = Arrangement.spacedBy(KazTheme.spacing.lg),
             ) {
-                InlineStat(label = "Arbeit", value = formatDuration(work))
-                InlineStat(label = "Pause", value = formatDuration(rest))
+                InlineStat(label = stringResource(Res.string.workout_rest_work), value = formatDuration(work))
+                InlineStat(label = stringResource(Res.string.workout_rest_rest), value = formatDuration(rest))
                 InlineStat(
-                    label = "Ø Pause",
+                    label = stringResource(Res.string.workout_rest_avg),
                     value = formatDuration(rest / rests.size),
                 )
             }
@@ -380,7 +416,7 @@ private fun ComparisonCard(
 
     Card {
         CardHeader {
-            Text(text = "Gegenüber letztem Mal", variant = TextVariant.H3)
+            Text(text = stringResource(Res.string.workout_comparison_title), variant = TextVariant.H3)
             // The name is a session label and may be blank, so the date carries the identity.
             Text(
                 text =
@@ -398,15 +434,26 @@ private fun ComparisonCard(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    text = "${if (improved) "+" else ""}$deltaReps Wdh.",
+                    text = stringResource(
+                        Res.string.workout_comparison_reps_delta,
+                        if (improved) "+" else "",
+                        deltaReps,
+                    ),
                     variant = TextVariant.H2,
                     color = accent,
                 )
                 InlineStat(
-                    label = "Veränderung",
-                    value = "${if (improved) "+" else ""}${kotlin.math.round(deltaPercent * 100).toInt()}%",
+                    label = stringResource(Res.string.workout_comparison_change),
+                    value = stringResource(
+                        Res.string.workout_comparison_percent,
+                        if (improved) "+" else "",
+                        kotlin.math.round(deltaPercent * 100).toInt(),
+                    ),
                 )
-                InlineStat(label = "Damals", value = "${previous.reps} Wdh.")
+                InlineStat(
+                    label = stringResource(Res.string.workout_comparison_before),
+                    value = stringResource(Res.string.reps_count, previous.reps),
+                )
             }
         }
     }
@@ -432,25 +479,26 @@ private fun CadenceCard(
 
     Card {
         CardHeader {
-            Text(text = "Tempo", variant = TextVariant.H3)
-            Text(text = "Sekunden pro Wiederholung", variant = TextVariant.Muted)
+            Text(text = stringResource(Res.string.workout_cadence_title), variant = TextVariant.H3)
+            Text(text = stringResource(Res.string.workout_cadence_subtitle), variant = TextVariant.Muted)
         }
         CardContent {
             Row(
                 modifier = Modifier.fillMaxWidth().padding(bottom = KazTheme.spacing.sm),
                 horizontalArrangement = Arrangement.spacedBy(KazTheme.spacing.lg),
             ) {
-                InlineStat(label = "Ø Tempo", value = formatSeconds(average))
-                InlineStat(label = "Schnellste", value = "${cadence.min()}s")
-                InlineStat(label = "Langsamste", value = "${cadence.max()}s")
+                InlineStat(label = stringResource(Res.string.workout_cadence_avg), value = formatSeconds(average))
+                InlineStat(label = stringResource(Res.string.workout_cadence_fastest), value = "${cadence.min()}s")
+                InlineStat(label = stringResource(Res.string.workout_cadence_slowest), value = "${cadence.max()}s")
             }
 
             // See TrendCard for why this is remembered and keyed on the source list.
+            val cadenceLabel = stringResource(Res.string.unit_sec_per_rep)
             val data =
-                remember(cadence) {
+                remember(cadence, cadenceLabel) {
                     listOf(
                         Line(
-                            label = "s / Wdh.",
+                            label = cadenceLabel,
                             values = cadence.map { it.toDouble() },
                             color = primaryBrush,
                             strokeAnimationSpec = tween(900, easing = EaseInOutCubic),
@@ -519,9 +567,9 @@ private fun LoadingBody() {
 @Composable
 private fun EmptyDataCard() {
     Card {
-        Text(text = "Keine Daten", variant = TextVariant.H3)
+        Text(text = stringResource(Res.string.workout_empty_title), variant = TextVariant.H3)
         Text(
-            text = "Dieses Workout hat noch keine Wiederholungen. Nimm es auf, um Diagramme zu sehen.",
+            text = stringResource(Res.string.workout_empty_hint),
             variant = TextVariant.Muted,
         )
     }

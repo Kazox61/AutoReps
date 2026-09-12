@@ -39,34 +39,78 @@ the tool-server and the bundled argent version match — plus `ffmpeg`, the
 
 - The demo seed (`shared/src/commonMain/.../DemoSeed.kt`) only runs on
   simulator/emulator. goldie wipes app data before every flow, so the seed is
-  what makes the screens look lived-in. Real devices never seed.
+  what makes the screens look lived-in. Real devices never seed. The seeded
+  workout names ("Morgen-Session", …) are user-content, not UI chrome — they
+  read as German in both store languages, which is fine.
 - argent's iOS flow tree cannot see Compose Multiplatform UI (it walks UIKit
   views, and Compose renders via Metal). Every flow therefore branches:
-  `when: platform: android` uses text selectors, `when: platform: ios` uses
-  measured coordinates + waits. If you move an iOS element, re-measure its
-  centre with argent `describe` and update the flow's echo comment.
-- Use the brew goldie's own argent for manual flow runs, or the devtools
-  handshake fails:
-  `node /opt/homebrew/lib/node_modules/goldie/node_modules/@swmansion/argent/dist/cli.js run flow-execute --name <flow> --project_root <repo> --device <udid>`
-- `theme.layout: "classic"` is broken in goldie 0.3.1 (device never renders);
-  the config uses hero / offset instead.
+  `when: platform: android` uses measured coordinates + waits, `when:
+  platform: ios` uses measured coordinates + waits. If you move an element,
+  re-measure its centre — on iOS with argent `describe`, on Android with
+  `adb shell uiautomator dump` — and update the flow's echo comment.
+- The Android branches are **language-neutral on purpose**: they gate on
+  locale-proof strings only — the seeded rep count "68", the seed name
+  "Morgen-Session", and labels that are identical in both languages ("EMOM",
+  "Tempo"). All taps are coordinates. Do not reintroduce UI-language text
+  selectors.
 - The flows pre-grant camera permission via `settings-permissions` before
   launching, so the record screen never shows the permission dialog mid-capture.
+- `theme.layout: "classic"` is broken in goldie 0.3.1 (device never renders);
+  the config uses hero / offset instead.
+
+## Capturing both languages
+
+The app speaks German and English (Compose Resources follows the device
+locale), and `goldie.config.ts` carries `de-DE` + `en-US` store copy. goldie
+0.3.1 captures raw **once per device**, pinned to `locales[0]` and only
+overlays copy per locale — so per-language screenshots need two passes with
+the one-locale configs in this directory:
+
+```bash
+export PATH="$HOME/Library/Android/sdk/platform-tools:$PATH"
+export GOLDIE_CONFIG="$PWD/goldie/goldie.config.ts"
+
+# 1. German pass: set both devices to German first
+adb shell cmd locale set-device-locale de-DE
+xcrun simctl spawn <sim-udid> defaults write -g AppleLanguages -array de
+xcrun simctl spawn <sim-udid> defaults write -g AppleLocale -string de_DE
+GOLDIE_CONFIG="$PWD/goldie/goldie.de.config.ts" goldie capture \
+  && GOLDIE_CONFIG="$PWD/goldie/goldie.de.config.ts" goldie frame \
+  && GOLDIE_CONFIG="$PWD/goldie/goldie.de.config.ts" goldie preview \
+  && GOLDIE_CONFIG="$PWD/goldie/goldie.de.config.ts" goldie manifest
+
+# 2. English pass: set both devices to English, then repeat with goldie.en.config.ts
+
+# 3. Re-run `goldie manifest` (and only manifest) with the main config so the
+#    studio lists both locales. Never re-run `frame` with the main config —
+#    it would render both locales from the last pass's raw captures.
+```
+
+Why the manual locale commands: goldie pins the iOS locale by writing the
+device's `.GlobalPreferences.plist` file with the **host** `defaults`, but the
+simulator's own cfprefsd never adopts that write — the app keeps rendering the
+previous language. Writing through `simctl spawn defaults` updates the runtime
+state goldie's file check then agrees with. goldie does not touch Android
+locale at all, and Android's per-app locale (`cmd locale set-app-locales`)
+does not survive goldie's uninstall-per-flow, so the device locale is set
+instead (`adb shell cmd locale set-device-locale <tag>`). Both writes survive
+reinstall and clear-data.
 
 ## Adding a locale (translations)
 
-The app currently renders German only; store copy in `goldie.config.ts` is
-already structured for more locales:
+The app and the store copy speak German and English; a third language needs:
 
-1. When the app itself speaks another language, add its locale key to every
-   copy record in `goldie.config.ts` (`headline`, `subhead`, `store.*`) and add
-   the code to `locales`.
-2. goldie then re-captures and re-frames per locale automatically.
-3. The flows' **Android** text selectors (`Heute`, `Verwerfen`, …) match the
-   app's UI language. Either record a per-locale flow set, or (better, once the
-   app sets test tags) switch those selectors to `id:` so one flow serves every
-   locale. The iOS branches are coordinate- and wait-based already and need no
-   translation.
-4. `store-01-home` and `store-preview-01-home` await `Noch 32 Wiederholungen` —
-   that string comes from the demo seed's fixed 68/100 goal; keep it in sync
-   with the locale's UI strings.
+1. Compose Resources strings in `shared/src/commonMain/composeResources/values-<lang>/`,
+   declared in `iosApp/iosApp/Info.plist` (`CFBundleLocalizations`).
+2. A locale key on every copy record in `goldie.config.ts` (`headline`,
+   `subhead`, `store.*`) and the code in `locales`.
+3. A new one-locale pass config (`goldie.<lang>.config.ts`) and a line in the
+   two-pass loop above; keep the flows' gate strings ("68", "Morgen-Session",
+   "EMOM", "Tempo") identical in the new language, or replace them with
+   language-proof ones.
+
+Manual flow runs (kept from the old notes — use the brew goldie's own argent,
+or the devtools handshake fails):
+`node /opt/homebrew/lib/node_modules/goldie/node_modules/@swmansion/argent/dist/cli.js run flow-execute --name <flow> --project_root <repo> --device <udid>`
+— flows with an `executionPrerequisite` additionally need
+`--prerequisiteAcknowledged true`.

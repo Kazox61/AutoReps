@@ -2,24 +2,27 @@ steps:
   - launch:
       ios: com.kazox.autoreps.AutoReps
       android: com.kazox.autoreps
-  - echo: Home → Verlauf tab → today's named session opens the analysis screen; scroll the Tempo chart into view
+  - echo: Home → history tab → today's named session opens the analysis screen; scroll the Tempo chart into view
   - when:
       platform: android
     steps:
       - await:
           visible:
-            text: Workout aufzeichnen
+            text: "68"
           timeout: 20000
+      - echo: History tab, then the first history row (today's session), centres measured via uiautomator on Pixel 10 Pro
       - tap:
-          text: Verlauf
+          x: 0.4109
+          y: 0.9412
+      - wait: 1500
       - await:
           visible:
             text: Morgen-Session
       - tap:
-          text: Morgen-Session
-      - await:
-          visible:
-            text: Abfall
+          x: 0.5
+          y: 0.1814
+      - wait: 1500
+      - echo: Scroll the Tempo chart into view, then let the 900ms draw-in finish
       - tool: gesture-swipe
         args:
           fromX: 0.5
