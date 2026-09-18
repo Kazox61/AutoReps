@@ -33,6 +33,8 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.kazox.autoreps.core.domain.model.Workout
 import com.kazox.autoreps.resources.Res
+import com.kazox.autoreps.resources.format_count_thousands
+import com.kazox.autoreps.resources.format_date_day_month_name
 import com.kazox.autoreps.resources.home_goal_reached
 import com.kazox.autoreps.resources.home_heatmap_less
 import com.kazox.autoreps.resources.home_heatmap_more
@@ -433,15 +435,15 @@ private fun GoalRing(
  * Abbreviates counts that outgrow a stat tile.
  *
  * Lifetime reps reach five digits within a few months, and the tiles are a third of the screen
- * wide — so past ten thousand it becomes `12,3k` rather than being silently truncated.
+ * wide — so past ten thousand it becomes `12,3k` (de) / `12.3k` (en) rather than being silently
+ * truncated.
  */
-private fun formatCount(value: Int): String =
-    if (value < 10_000) {
-        value.toString()
-    } else {
-        val tenths = (value / 100.0).let { kotlin.math.round(it).toInt() }
-        "${tenths / 10},${tenths % 10}k"
-    }
+@Composable
+private fun formatCount(value: Int): String {
+    if (value < 10_000) return value.toString()
+    val tenths = (value / 100.0).let { kotlin.math.round(it).toInt() }
+    return stringResource(Res.string.format_count_thousands, tenths / 10, tenths % 10)
+}
 
 /** Lowest fill a day with any reps gets, so one rep is still visibly different from none. */
 private const val HEATMAP_MIN_ALPHA = 0.25f
@@ -475,10 +477,14 @@ private fun monthNames(): List<String> =
         stringResource(Res.string.month_december),
     )
 
-/** `2026-08-27T18:30:00` renders as `27. August`; falls back to the raw value. */
+/** `2026-08-27T18:30:00` renders as `27. August` (de) / `August 27` (en); falls back to the raw value. */
 @Composable
 private fun formatDate(startedAt: String): String {
     val parsed = runCatching { LocalDate.parse(startedAt.substringBefore('T')) }.getOrNull()
         ?: return startedAt
-    return "${parsed.day}. ${monthNames()[parsed.monthNumber - 1]}"
+    return stringResource(
+        Res.string.format_date_day_month_name,
+        parsed.day,
+        monthNames()[parsed.monthNumber - 1],
+    )
 }

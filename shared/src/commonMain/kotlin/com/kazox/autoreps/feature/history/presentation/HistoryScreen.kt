@@ -21,6 +21,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.kazox.autoreps.core.domain.model.Workout
 import com.kazox.autoreps.resources.Res
+import com.kazox.autoreps.resources.format_date_time
+import com.kazox.autoreps.resources.format_duration
 import com.kazox.autoreps.resources.history_empty_hint
 import com.kazox.autoreps.resources.history_empty_title
 import com.kazox.autoreps.resources.history_title
@@ -231,19 +233,23 @@ private fun EmptyState(
  * [Workout.startedAt] is stored as `LocalDateTime.toString()`, so it parses as ISO-8601. Falls
  * back to the raw value rather than throwing if a row was written in some other format.
  */
-private fun formatStartedAt(startedAt: String): String =
-    runCatching {
-        val dt = LocalDateTime.parse(startedAt)
-        val day = dt.day.toString().padStart(2, '0')
-        val month = dt.monthNumber.toString().padStart(2, '0')
-        val hour = dt.hour.toString().padStart(2, '0')
-        val minute = dt.minute.toString().padStart(2, '0')
-        "$day.$month.${dt.year}, $hour:$minute"
-    }.getOrDefault(startedAt)
+@Composable
+private fun formatStartedAt(startedAt: String): String {
+    val dt = runCatching { LocalDateTime.parse(startedAt) }.getOrNull() ?: return startedAt
+    return stringResource(
+        Res.string.format_date_time,
+        dt.day.toString().padStart(2, '0'),
+        dt.monthNumber.toString().padStart(2, '0'),
+        dt.year.toString(),
+        dt.hour.toString().padStart(2, '0'),
+        dt.minute.toString().padStart(2, '0'),
+    )
+}
 
 /** [Workout.duration] is assumed to be seconds — see the note in the review. */
+@Composable
 private fun formatDuration(duration: Int): String {
     val minutes = duration / 60
     val seconds = duration % 60
-    return "$minutes:${seconds.toString().padStart(2, '0')} min"
+    return stringResource(Res.string.format_duration, minutes, seconds.toString().padStart(2, '0'))
 }

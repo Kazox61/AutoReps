@@ -26,6 +26,10 @@ import com.kazox.autoreps.resources.Res
 import com.kazox.autoreps.resources.action_back
 import com.kazox.autoreps.resources.action_save
 import com.kazox.autoreps.resources.error_save_failed
+import com.kazox.autoreps.resources.format_date_day_month
+import com.kazox.autoreps.resources.format_duration
+import com.kazox.autoreps.resources.format_seconds_short
+import com.kazox.autoreps.resources.format_seconds_whole
 import com.kazox.autoreps.resources.reps_count
 import com.kazox.autoreps.resources.unit_avg
 import com.kazox.autoreps.resources.unit_reps_short
@@ -488,8 +492,14 @@ private fun CadenceCard(
                 horizontalArrangement = Arrangement.spacedBy(KazTheme.spacing.lg),
             ) {
                 InlineStat(label = stringResource(Res.string.workout_cadence_avg), value = formatSeconds(average))
-                InlineStat(label = stringResource(Res.string.workout_cadence_fastest), value = "${cadence.min()}s")
-                InlineStat(label = stringResource(Res.string.workout_cadence_slowest), value = "${cadence.max()}s")
+                InlineStat(
+                    label = stringResource(Res.string.workout_cadence_fastest),
+                    value = stringResource(Res.string.format_seconds_whole, cadence.min()),
+                )
+                InlineStat(
+                    label = stringResource(Res.string.workout_cadence_slowest),
+                    value = stringResource(Res.string.format_seconds_whole, cadence.max()),
+                )
             }
 
             // See TrendCard for why this is remembered and keyed on the source list.
@@ -578,25 +588,28 @@ private fun EmptyDataCard() {
 // ─── Formatting ───────────────────────────────────────────────
 
 /** [Workout.duration] is seconds; renders as `m:ss min`. */
+@Composable
 private fun formatDuration(duration: Int): String {
     val minutes = duration / 60
     val seconds = duration % 60
-    return "$minutes:${seconds.toString().padStart(2, '0')} min"
+    return stringResource(Res.string.format_duration, minutes, seconds.toString().padStart(2, '0'))
 }
 
-/** `2.4` renders as `2,4s`; null as `–`. */
+/** `2.4` renders as `2,4s` (de) / `2.4s` (en); null as `–`. */
+@Composable
 private fun formatSeconds(seconds: Double?): String {
     if (seconds == null) return "–"
     val tenths = kotlin.math.round(seconds * 10).toInt()
-    return "${tenths / 10},${tenths % 10}s"
+    return stringResource(Res.string.format_seconds_short, tenths / 10, tenths % 10)
 }
 
-/** `2026-08-22T18:30:00` renders as `22.08.`; falls back to the raw value. */
-private fun formatDayMonth(startedAt: String): String =
-    runCatching {
-        val date = startedAt.substringBefore('T').split('-')
-        "${date[2]}.${date[1]}."
-    }.getOrDefault(startedAt)
+/** `2026-08-22T18:30:00` renders as `22.08.` (de) / `08/22` (en); falls back to the raw value. */
+@Composable
+private fun formatDayMonth(startedAt: String): String {
+    val date = startedAt.substringBefore('T').split('-')
+    if (date.size < 3) return startedAt
+    return stringResource(Res.string.format_date_day_month, date[2], date[1])
+}
 
 /** How far the last set fell below the best, e.g. `-75%`. `–` when there is no second set. */
 private fun formatDropOff(fraction: Double?): String =

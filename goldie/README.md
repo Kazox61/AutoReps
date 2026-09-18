@@ -79,7 +79,14 @@ GOLDIE_CONFIG="$PWD/goldie/goldie.de.config.ts" goldie capture \
   && GOLDIE_CONFIG="$PWD/goldie/goldie.de.config.ts" goldie preview \
   && GOLDIE_CONFIG="$PWD/goldie/goldie.de.config.ts" goldie manifest
 
-# 2. English pass: set both devices to English, then repeat with goldie.en.config.ts
+# 2. English pass: set both devices to English first
+adb shell cmd locale set-device-locale en-US
+xcrun simctl spawn <sim-udid> defaults write -g AppleLanguages -array en
+xcrun simctl spawn <sim-udid> defaults write -g AppleLocale -string en_US
+GOLDIE_CONFIG="$PWD/goldie/goldie.en.config.ts" goldie capture \
+  && GOLDIE_CONFIG="$PWD/goldie/goldie.en.config.ts" goldie frame \
+  && GOLDIE_CONFIG="$PWD/goldie/goldie.en.config.ts" goldie preview \
+  && GOLDIE_CONFIG="$PWD/goldie/goldie.en.config.ts" goldie manifest
 
 # 3. Re-run `goldie manifest` (and only manifest) with the main config so the
 #    studio lists both locales. Never re-run `frame` with the main config —
