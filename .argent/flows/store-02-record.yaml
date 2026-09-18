@@ -25,13 +25,13 @@ steps:
     steps:
       - await:
           visible:
-            text: Workout aufzeichnen
+            text: "68"
           timeout: 20000
+      - echo: Floating plus button, centre measured via uiautomator on Pixel 10 Pro (locale-independent position)
       - tap:
-          text: Workout aufzeichnen
-      - await:
-          visible:
-            text: Starten
+          x: 0.7391
+          y: 0.9412
+      - wait: 1500
       - await:
           idle: true
   - when:

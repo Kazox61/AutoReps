@@ -117,9 +117,9 @@ class AddEditWorkoutViewModel(
             } catch (e: Exception) {
                 // Without this the failed coroutine leaves isSaving stuck true: the save button
                 // spins forever, stays disabled, and never navigates — with nothing on screen
-                // to say why.
+                // to say why. Raw cause only — the screen composes the localized message.
                 _state.update {
-                    it.copy(isSaving = false, saveError = "Speichern fehlgeschlagen: ${e.message}")
+                    it.copy(isSaving = false, saveError = e.message ?: "")
                 }
             }
         }

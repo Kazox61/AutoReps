@@ -25,7 +25,7 @@ steps:
     steps:
       - await:
           visible:
-            text: Noch 32 Wiederholungen
+            text: "68"
           timeout: 20000
       - wait: 1200
       - tool: gesture-swipe

@@ -7,9 +7,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
+import com.kazox.autoreps.resources.Res
+import com.kazox.autoreps.resources.record_camera_unavailable
 import com.kazox.ui.components.text.Text
 import com.kazox.ui.components.text.TextVariant
 import com.kazox.ui.foundation.KazTheme
+import org.jetbrains.compose.resources.stringResource
 
 /**
  * Desktop has no pose detection: MediaPipe ships mobile-only for this task, and the desktop app
@@ -26,7 +29,7 @@ actual fun PoseCameraView(
 ) {
     Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Text(
-            text = "Aufzeichnung ist nur auf Android und iOS verfügbar.",
+            text = stringResource(Res.string.record_camera_unavailable),
             variant = TextVariant.Muted,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(KazTheme.spacing.lg),
